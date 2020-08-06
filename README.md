@@ -1,7 +1,5 @@
 # Swish For Merchants
-## Node.js
-
-Node.js library for integrating Swish for Merchants.
+Node.js library for integrating Swish for Merchants. In Progress!
 
 ## API
 ```javascript
