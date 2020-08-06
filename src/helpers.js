@@ -10,12 +10,11 @@ function helpers() {
 
   function verify(thing, type) {
     // All types must be string type
-    if (typeof thing !== 'string') {
-      return false;
-    }
-
     switch (type) {
       case 'merchantAlias': {
+        if (typeof thing !== 'string') {
+          return false;
+        }
         const re = /^(^123)[0-9]+$/;
         const alias = thing.replace(/ /g, '');
         if (re.test(alias) && alias.length === 10) {
@@ -24,6 +23,9 @@ function helpers() {
         return false;
       }
       case 'callbackUrl': {
+        if (typeof thing !== 'string') {
+          return false;
+        }
         let url;
         try {
           url = new URL(thing);
@@ -34,6 +36,23 @@ function helpers() {
           return url.toString();
         }
         return false;
+      }
+      case 'amount': {
+        let amount;
+        if (typeof thing === 'string') {
+          if (!/^[0-9.]+$/.test(thing)) {
+            return false;
+          }
+          amount = parseFloat(thing, 10);
+        } else if (typeof thing === 'number') {
+          amount = thing;
+        } else {
+          return false;
+        }
+        if (amount < 1 || amount > 999999999999.99) {
+          return false;
+        }
+        return amount.toFixed(2);
       }
       default:
         return false;

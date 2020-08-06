@@ -63,7 +63,13 @@ class Swish {
 
     // User provided values
     // TODO Validate Values
-    const { amount, payerAlias } = args;
+    // Verify and assign payee alias
+    const amount = verify(args.amount, 'amount');
+    if (!amount) {
+      throw new Error('Invalid Amount. Must be a valid amount between 1 and 999999999999.99 SEK.');
+    }
+
+    const { payerAlias } = args;
     const message = args.message || '';
 
     const config = {

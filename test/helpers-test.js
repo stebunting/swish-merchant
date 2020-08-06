@@ -83,4 +83,49 @@ describe('Swish Helper Tests', function () {
       assert.equal(verify(undefined, 'callbackUrl'), false);
     });
   });
+
+  describe('Amount verification...', function () {
+    it('allows amounts between 1 and 999999999999.99 SEK', function () {
+      assert.equal(verify('200', 'amount'), '200.00');
+      assert.equal(verify('1', 'amount'), '1.00');
+      assert.equal(verify(1, 'amount'), '1.00');
+      assert.equal(verify('999999999999.99', 'amount'), '999999999999.99');
+      assert.equal(verify(999999999999.99, 'amount'), '999999999999.99');
+    });
+
+    it('formats amounts to 2 decimal places with round', function () {
+      assert.equal(verify('200.009', 'amount'), '200.01');
+      assert.equal(verify(498.9999999, 'amount'), '499.00');
+      assert.equal(verify('767.1', 'amount'), '767.10');
+      assert.equal(verify('1.14', 'amount'), '1.14');
+      assert.equal(verify(645.6926962, 'amount'), '645.69');
+      assert.equal(verify(326, 'amount'), '326.00');
+      assert.equal(verify('5523', 'amount'), '5523.00');
+    });
+
+    it('fails amounts that are less than 1 or more than 999999999999.99', function () {
+      assert.equal(verify(0.99, 'amount'), false);
+      assert.equal(verify('0.99', 'amount'), false);
+      assert.equal(verify(1000000000000, 'amount'), false);
+      assert.equal(verify('1000000000000', 'amount'), false);
+      assert.equal(verify('0', 'amount'), false);
+      assert.equal(verify('-100', 'amount'), false);
+      assert.equal(verify('10000000000000', 'amount'), false);
+    });
+
+    it('fails invalid strings', function () {
+      assert.equal(verify('invalid', 'amount'), false);
+      assert.equal(verify('165.34end', 'amount'), false);
+      assert.equal(verify('16L5.23', 'amount'), false);
+      assert.equal(verify('l33t', 'amount'), false);
+    });
+
+    it('fails amounts that are not strings or numbers', function () {
+      assert.equal(verify({ amount: '1236782918' }, 'amount'), false);
+      assert.equal(verify(['1236782918'], 'amount'), false);
+      assert.equal(verify(true, 'amount'), false);
+      assert.equal(verify(null, 'amount'), false);
+      assert.equal(verify(undefined, 'amount'), false);
+    });
+  });
 });
