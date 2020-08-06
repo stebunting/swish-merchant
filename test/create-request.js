@@ -25,6 +25,15 @@ describe('Create Payment Request Integration', () => {
       assert(response.success);
     });
 
+    it('succeeds with valid message', async function () {
+      const response = await swish.createPaymentRequest({
+        phoneNumber: '0738792',
+        amount: '1',
+        message: 'För Åsa, (25)'
+      });
+      assert(response.success);
+    });
+
     it('fails with invalid payer alias', async function () {
       try {
         await swish.createPaymentRequest({
@@ -61,6 +70,20 @@ describe('Create Payment Request Integration', () => {
       } catch (error) {
         assert.equal(error.name, 'Error');
         assert.equal(error.message, 'Invalid Amount. Must be a valid amount between 1 and 999999999999.99 SEK.');
+      }
+    });
+
+    it('fails with invalid message', async function () {
+      try {
+        await swish.createPaymentRequest({
+          phoneNumber: '0722247583',
+          amount: '100',
+          message: '[INVALIDMESSAGE]'
+        });
+        assert(false);
+      } catch (error) {
+        assert.equal(error.name, 'Error');
+        assert.equal(error.message, 'Invalid Message. Must be less than 50 characters and only use a-ö, A-Ö, the numbers 0-9 and the special characters :;.,?!()”.');
       }
     });
   });

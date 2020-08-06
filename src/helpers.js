@@ -22,6 +22,7 @@ function helpers() {
         }
         return false;
       }
+
       case 'payerAlias': {
         if (typeof thing !== 'string') {
           return false;
@@ -42,6 +43,7 @@ function helpers() {
         }
         return alias;
       }
+
       case 'callbackUrl': {
         if (typeof thing !== 'string') {
           return false;
@@ -57,6 +59,7 @@ function helpers() {
         }
         return false;
       }
+
       case 'amount': {
         let amount;
         if (typeof thing === 'string') {
@@ -74,6 +77,18 @@ function helpers() {
         }
         return amount.toFixed(2);
       }
+
+      case 'message': {
+        if (typeof thing !== 'string' || thing.length > 50) {
+          return false;
+        }
+        const re = /^[0-9a-zA-ZåäöÅÄÖ :;.,?!()"]*$/;
+        if (re.test(thing)) {
+          return thing;
+        }
+        return false;
+      }
+
       default:
         return false;
     }

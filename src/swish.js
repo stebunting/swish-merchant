@@ -64,19 +64,23 @@ class Swish {
     // User provided required values
     // Verify and assign amount
     const amount = verify(args.amount, 'amount');
-    if (!amount) {
+    if (amount === false) {
       throw new Error('Invalid Amount. Must be a valid amount between 1 and 999999999999.99 SEK.');
     }
 
     // Verify and assign payer alias
     const payerAlias = verify(args.phoneNumber, 'payerAlias');
-    if (!payerAlias) {
+    if (payerAlias === false) {
       throw new Error('Invalid Phone Number. Must be a valid Swedish phone number between 8 and 15 numerals (including country code and no leading zeros.');
     }
 
-    // User provided optional values
-    const message = args.message || '';
+    // Verify and assign message (blank by default)
+    const message = verify(args.message || '', 'message');
+    if (message === false) {
+      throw new Error('Invalid Message. Must be less than 50 characters and only use a-ö, A-Ö, the numbers 0-9 and the special characters :;.,?!()”.');
+    }
 
+    // Create API configuration
     const config = {
       method: 'put',
       url: `${this.url}${endpoint}${id}`,

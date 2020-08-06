@@ -123,7 +123,7 @@ describe('Swish Helper Tests', function () {
       assert.equal(verify(999999999999.99, 'amount'), '999999999999.99');
     });
 
-    it('formats amounts to 2 decimal places with round', function () {
+    it('formats amounts to 2 decimal places with rounding', function () {
       assert.equal(verify('200.009', 'amount'), '200.01');
       assert.equal(verify(498.9999999, 'amount'), '499.00');
       assert.equal(verify('767.1', 'amount'), '767.10');
@@ -156,6 +156,34 @@ describe('Swish Helper Tests', function () {
       assert.equal(verify(true, 'amount'), false);
       assert.equal(verify(null, 'amount'), false);
       assert.equal(verify(undefined, 'amount'), false);
+    });
+  });
+
+  describe('Message verification...', function () {
+    it('allows messages up to 50 allowable characters', function () {
+      assert.equal(verify('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwx', 'message'), 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwx');
+      assert.equal(verify('yz(012)3456789:åäöÅÄÖ', 'message'), 'yz(012)3456789:åäöÅÄÖ');
+      assert.equal(verify('"?"', 'message'), '"?"');
+      assert.equal(verify('!,.', 'message'), '!,.');
+      assert.equal(verify('', 'message'), '');
+    });
+
+    it('fails messages over 50 characters', function () {
+      assert.equal(verify('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxy', 'message'), false);
+    });
+
+    it('fails messages with disallowed characters', function () {
+      assert.equal(verify('{no]', 'message'), false);
+      assert.equal(verify('£#ajklj]', 'message'), false);
+    });
+
+    it('fails messages that are not strings', function () {
+      assert.equal(verify(76897238497389, 'message'), false);
+      assert.equal(verify({ message: 'message' }, 'message'), false);
+      assert.equal(verify(['message'], 'message'), false);
+      assert.equal(verify(true, 'message'), false);
+      assert.equal(verify(null, 'message'), false);
+      assert.equal(verify(undefined, 'message'), false);
     });
   });
 });

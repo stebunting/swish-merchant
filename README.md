@@ -17,8 +17,9 @@ const swish = new Swish({
 // Call the methods
 try {
   swish.createPaymentRequest({
-    phoneNumber: 'USERS_PHONE_NUMER',
-    amount: 'AMOUNT_TO_REQUEST'
+    phoneNumber: 'USERS_PHONE_NUMER',                             // Required
+    amount: 'AMOUNT_TO_REQUEST',                                  // Required
+    message: 'MESSAGE_TO_USER'                                    // Optional
   });
 } catch (error) {
   // Catch
