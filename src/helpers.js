@@ -22,6 +22,26 @@ function helpers() {
         }
         return false;
       }
+      case 'payerAlias': {
+        if (typeof thing !== 'string') {
+          return false;
+        }
+        let alias = thing.replace(/\D/g, '');
+        while (alias.charAt(0) === '0') {
+          alias = alias.substring(1);
+        }
+        if (alias.substring(0, 2) === '46') {
+          alias = alias.substring(2);
+          while (alias.charAt(0) === '0') {
+            alias = alias.substring(1);
+          }
+        }
+        alias = `46${alias}`;
+        if (alias.length < 8 || alias.length > 15) {
+          return false;
+        }
+        return alias;
+      }
       case 'callbackUrl': {
         if (typeof thing !== 'string') {
           return false;

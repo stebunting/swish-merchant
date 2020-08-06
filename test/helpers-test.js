@@ -58,6 +58,36 @@ describe('Swish Helper Tests', function () {
     });
   });
 
+  describe('Payer Alias verification...', function () {
+    it('allows aliases with between 8 and 15 digits (including code)', function () {
+      assert.equal(verify('07968726312', 'payerAlias'), '467968726312');
+      assert.equal(verify('+468976283647', 'payerAlias'), '468976283647');
+      assert.equal(verify('+0142543', 'payerAlias'), '46142543');
+      assert.equal(verify('+46 (0) 7365 21-81', 'payerAlias'), '4673652181');
+      assert.equal(verify('1 2   38 6    4    9   8     6     2', 'payerAlias'), '461238649862');
+      assert.equal(verify('08275829384768', 'payerAlias'), '468275829384768');
+      assert.equal(verify('0000000046000000078913875', 'payerAlias'), '4678913875');
+    });
+
+    it('fails aliases with less than 8 or more than 15 digits (including code)', function () {
+      assert.equal(verify('123', 'payerAlias'), false);
+      assert.equal(verify('4672986', 'payerAlias'), false);
+      assert.equal(verify('071984769284562', 'payerAlias'), false);
+      assert.equal(verify('46 7     9 0     2  1', 'payerAlias'), false);
+      assert.equal(verify('', 'payerAlias'), false);
+      assert.equal(verify('0000072374', 'payerAlias'), false);
+    });
+
+    it('fails aliases that are not strings', function () {
+      assert.equal(verify(1237485938, 'payerAlias'), false);
+      assert.equal(verify({ phoneNumber: '1236782918' }, 'payerAlias'), false);
+      assert.equal(verify(['1236782918'], 'payerAlias'), false);
+      assert.equal(verify(true, 'payerAlias'), false);
+      assert.equal(verify(null, 'payerAlias'), false);
+      assert.equal(verify(undefined, 'payerAlias'), false);
+    });
+  });
+
   describe('Callback URL verification...', function () {
     it('allows urls with https protocol', function () {
       assert.equal(verify('https://www.google.com/', 'callbackUrl'), 'https://www.google.com/');

@@ -61,15 +61,20 @@ class Swish {
     const endpoint = '/api/v2/paymentrequests/';
     const id = getSwishID();
 
-    // User provided values
-    // TODO Validate Values
-    // Verify and assign payee alias
+    // User provided required values
+    // Verify and assign amount
     const amount = verify(args.amount, 'amount');
     if (!amount) {
       throw new Error('Invalid Amount. Must be a valid amount between 1 and 999999999999.99 SEK.');
     }
 
-    const { payerAlias } = args;
+    // Verify and assign payer alias
+    const payerAlias = verify(args.phoneNumber, 'payerAlias');
+    if (!payerAlias) {
+      throw new Error('Invalid Phone Number. Must be a valid Swedish phone number between 8 and 15 numerals (including country code and no leading zeros.');
+    }
+
+    // User provided optional values
     const message = args.message || '';
 
     const config = {

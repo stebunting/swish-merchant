@@ -19,7 +19,7 @@ describe('Create Payment Request Integration', () => {
 
     it('succeeds with valid information', async function () {
       const response = await swish.createPaymentRequest({
-        payerAlias: '4672242856',
+        phoneNumber: '072242856',
         amount: '200'
       });
       assert(response.success);
@@ -28,20 +28,20 @@ describe('Create Payment Request Integration', () => {
     it('fails with invalid payer alias', async function () {
       try {
         await swish.createPaymentRequest({
-          payerAlias: '4672242856234324234',
+          phoneNumber: '0787',
           amount: '200'
         });
+        assert(false);
       } catch (error) {
-        assert.equal(error.name, 'SwishError');
-        assert.equal(error.errors.length, 1);
-        assert.equal(error.errors[0].errorCode, 'BE18');
+        assert.equal(error.name, 'Error');
+        assert.equal(error.message, 'Invalid Phone Number. Must be a valid Swedish phone number between 8 and 15 numerals (including country code and no leading zeros.');
       }
     });
 
     it('fails with amount too high', async function () {
       try {
         await swish.createPaymentRequest({
-          payerAlias: '46722247583',
+          phoneNumber: '0722247583',
           amount: '1000000000000'
         });
         assert(false);
@@ -54,7 +54,7 @@ describe('Create Payment Request Integration', () => {
     it('fails with invalid amount', async function () {
       try {
         await swish.createPaymentRequest({
-          payerAlias: '46722247583',
+          phoneNumber: '0722247583',
           amount: '0.001'
         });
         assert(false);
