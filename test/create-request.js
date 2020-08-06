@@ -34,6 +34,15 @@ describe('Create Payment Request Integration', () => {
       assert(response.success);
     });
 
+    it('succeeds with valid payeePaymentReference', async function () {
+      const response = await swish.createPaymentRequest({
+        phoneNumber: '0738792',
+        amount: '1',
+        payeePaymentReference: '0175837AIN'
+      });
+      assert(response.success);
+    });
+
     it('fails with invalid payer alias', async function () {
       try {
         await swish.createPaymentRequest({
@@ -84,6 +93,20 @@ describe('Create Payment Request Integration', () => {
       } catch (error) {
         assert.equal(error.name, 'Error');
         assert.equal(error.message, 'Invalid Message. Must be less than 50 characters and only use a-ö, A-Ö, the numbers 0-9 and the special characters :;.,?!()”.');
+      }
+    });
+
+    it('fails with invalid payeePaymentReference', async function () {
+      try {
+        await swish.createPaymentRequest({
+          phoneNumber: '0722247583',
+          amount: '100',
+          payeePaymentReference: '[INVALIDMESSAGE]'
+        });
+        assert(false);
+      } catch (error) {
+        assert.equal(error.name, 'Error');
+        assert.equal(error.message, 'Invalid Payee Payment Reference. Must be between 1 and 36 characters and only use a-ö, A-Ö and the numbers 0-9.');
       }
     });
   });

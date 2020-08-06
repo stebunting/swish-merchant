@@ -98,6 +98,13 @@ class Swish {
       }
     };
 
+    if (args.payeePaymentReference) {
+      config.data.payeePaymentReference = verify(args.payeePaymentReference, 'payeePaymentReference');
+      if (config.data.payeePaymentReference === false) {
+        throw new Error('Invalid Payee Payment Reference. Must be between 1 and 36 characters and only use a-ö, A-Ö and the numbers 0-9.');
+      }
+    }
+
     return new Promise((resolve, reject) => axios(config)
       .then((response) => {
         if (response.status !== 201) {

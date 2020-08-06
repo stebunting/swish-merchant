@@ -19,7 +19,8 @@ try {
   swish.createPaymentRequest({
     phoneNumber: 'USERS_PHONE_NUMER',                             // Required
     amount: 'AMOUNT_TO_REQUEST',                                  // Required
-    message: 'MESSAGE_TO_USER'                                    // Optional
+    message: 'MESSAGE_TO_USER',                                   // Optional
+    payeePaymentReference: 'CUSTOM_REFERENCE'                     // Optional
   });
 } catch (error) {
   // Catch

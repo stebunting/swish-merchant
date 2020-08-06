@@ -15,19 +15,16 @@ function helpers() {
         if (typeof thing !== 'string') {
           return false;
         }
-        const re = /^(^123)[0-9]+$/;
+        const re = /^123[0-9]{7}$/;
         const alias = thing.replace(/ /g, '');
-        if (re.test(alias) && alias.length === 10) {
-          return alias;
-        }
-        return false;
+        return re.test(alias) ? alias : false;
       }
 
       case 'payerAlias': {
         if (typeof thing !== 'string') {
           return false;
         }
-        let alias = thing.replace(/\D/g, '');
+        let alias = thing.replace(/[^0-9]/g, '');
         while (alias.charAt(0) === '0') {
           alias = alias.substring(1);
         }
@@ -38,32 +35,27 @@ function helpers() {
           }
         }
         alias = `46${alias}`;
-        if (alias.length < 8 || alias.length > 15) {
-          return false;
-        }
-        return alias;
+        const re = /^46[1-9][0-9]{5,12}$/;
+        return re.test(alias) ? alias : false;
       }
 
       case 'callbackUrl': {
         if (typeof thing !== 'string') {
           return false;
         }
-        let url;
         try {
-          url = new URL(thing);
+          const url = new URL(thing);
+          return url.protocol === 'https:' ? url.toString() : false;
         } catch (error) {
           return false;
         }
-        if (url.protocol === 'https:') {
-          return url.toString();
-        }
-        return false;
       }
 
       case 'amount': {
         let amount;
         if (typeof thing === 'string') {
-          if (!/^[0-9.]+$/.test(thing)) {
+          const re = /^[0-9]*\.?[0-9]*$/;
+          if (!re.test(thing)) {
             return false;
           }
           amount = parseFloat(thing, 10);
@@ -79,14 +71,19 @@ function helpers() {
       }
 
       case 'message': {
-        if (typeof thing !== 'string' || thing.length > 50) {
+        if (typeof thing !== 'string') {
           return false;
         }
-        const re = /^[0-9a-zA-ZåäöÅÄÖ :;.,?!()"]*$/;
-        if (re.test(thing)) {
-          return thing;
+        const re = /^[0-9a-zA-ZåäöÅÄÖ :;.,?!()"]{0,50}$/;
+        return re.test(thing) ? thing : false;
+      }
+
+      case 'payeePaymentReference': {
+        if (typeof thing !== 'string') {
+          return false;
         }
-        return false;
+        const re = /^[0-9A-Za-z]{1,36}$/;
+        return re.test(thing) ? thing : false;
       }
 
       default:

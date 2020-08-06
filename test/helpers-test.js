@@ -22,7 +22,7 @@ describe('Swish Helper Tests', function () {
       assert.equal(verify('123 976 2836', 'merchantAlias'), '1239762836');
       assert.equal(verify('1236782918', 'merchantAlias'), '1236782918');
       assert.equal(verify('1 2   38 6    4    9   8     6     2', 'merchantAlias'), '1238649862');
-      assert.equal(verify('1231231231', 'merchantAlias'), '1231231231');
+      assert.equal(verify('   1231231231 ', 'merchantAlias'), '1231231231');
       assert.equal(verify('1 2 39762833', 'merchantAlias'), '1239762833');
     });
 
@@ -184,6 +184,36 @@ describe('Swish Helper Tests', function () {
       assert.equal(verify(true, 'message'), false);
       assert.equal(verify(null, 'message'), false);
       assert.equal(verify(undefined, 'message'), false);
+    });
+  });
+
+  describe('Payee Payment Reference verification...', function () {
+    it('allows references from 1 to 36 allowable characters', function () {
+      assert.equal(verify('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghij', 'payeePaymentReference'), 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghij');
+      assert.equal(verify('klmnopqrstuvwxyz0123456789', 'payeePaymentReference'), 'klmnopqrstuvwxyz0123456789');
+      assert.equal(verify('J', 'payeePaymentReference'), 'J');
+      assert.equal(verify('Aa9', 'payeePaymentReference'), 'Aa9');
+    });
+
+    it('fails empty references and references over 36 characters', function () {
+      assert.equal(verify('', 'payeePaymentReference'), false);
+      assert.equal(verify('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijk', 'payeePaymentReference'), false);
+    });
+
+    it('fails messages with disallowed characters', function () {
+      assert.equal(verify('AB!', 'payeePaymentReference'), false);
+      assert.equal(verify('Lf$', 'payeePaymentReference'), false);
+      assert.equal(verify('j£u', 'payeePaymentReference'), false);
+      assert.equal(verify('[huj]', 'payeePaymentReference'), false);
+    });
+
+    it('fails messages that are not strings', function () {
+      assert.equal(verify(12351234, 'payeePaymentReference'), false);
+      assert.equal(verify({ payeePaymentReference: 'ref' }, 'payeePaymentReference'), false);
+      assert.equal(verify(['ref'], 'payeePaymentReference'), false);
+      assert.equal(verify(true, 'payeePaymentReference'), false);
+      assert.equal(verify(null, 'payeePaymentReference'), false);
+      assert.equal(verify(undefined, 'payeePaymentReference'), false);
     });
   });
 });
