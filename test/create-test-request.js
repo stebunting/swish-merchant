@@ -6,16 +6,80 @@ const Swish = require('../src/swish');
 
 describe('Create Payment Request Integration', () => {
   describe('Payment Request call...', () => {
-    const swish = new Swish({
-      alias: '1234679304',
-      cert: 'test/cert/test.pem',
-      key: 'test/cert/test.key',
-      ca: 'test/cert/test-ca.pem',
-      password: 'swish'
+    let swish;
+
+    it('throws on invalid alias', function () {
+      try {
+        const response = new Swish({ alias: '12346793041' });
+        assert.equal(response.success, false);
+      } catch (error) {
+        assert.equal(error.name, 'Error');
+        assert.equal(error.message, 'Invalid Merchant Alias. Alias must be only numbers, 10 digits long and start with 123.');
+      }
     });
 
-    // Set URL to Simulator Testing URL
-    swish.url = 'https://mss.cpc.getswish.net/swish-cpcapi';
+    it('throws on missing alias', function () {
+      try {
+        const response = new Swish();
+        assert.equal(response.success, false);
+      } catch (error) {
+        assert.equal(error.name, 'Error');
+        assert.equal(error.message, 'Alias Required.');
+      }
+    });
+
+    it('throws on invalid certificate', function () {
+      try {
+        const response = new Swish({
+          alias: '1234679304',
+          cert: 'invalid/path/to/cert'
+        });
+        assert.equal(response.success, false);
+      } catch (error) {
+        assert.equal(error.name, 'Error');
+        assert.equal(error.message, 'Invalid Certificate.');
+      }
+    });
+
+    it('throws on invalid key', function () {
+      try {
+        const response = new Swish({
+          alias: '1234679304',
+          key: 'invalid/path/to/key'
+        });
+        assert.equal(response.success, false);
+      } catch (error) {
+        assert.equal(error.name, 'Error');
+        assert.equal(error.message, 'Invalid Key.');
+      }
+    });
+
+    it('throws on invalid ca', function () {
+      try {
+        const response = new Swish({
+          alias: '1234679304',
+          ca: 'invalid/path/to/key'
+        });
+        assert.equal(response.success, false);
+      } catch (error) {
+        assert.equal(error.name, 'Error');
+        assert.equal(error.message, 'Invalid CA.');
+      }
+    });
+
+    it('initiates class', function () {
+      swish = new Swish({
+        alias: '1234679304',
+        cert: 'test/private/test.pem',
+        key: 'test/private/test.key',
+        ca: 'test/private/test-ca.pem',
+        password: 'swish'
+      });
+      assert(true);
+
+      // Set URL to Simulator Testing URL
+      swish.url = 'https://mss.cpc.getswish.net/swish-cpcapi';
+    });
 
     it('succeeds with valid information', async function () {
       const response = await swish.createPaymentRequest({

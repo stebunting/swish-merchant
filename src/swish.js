@@ -5,11 +5,14 @@ const SwishError = require('./swish-error');
 const { getSwishID, verify } = require('./helpers');
 
 class Swish {
-  constructor(args) {
+  constructor(args = {}) {
     const defaultCallback = 'https://swish-callback.com/';
     this.url = 'https://cpc.getswish.net/swish-cpcapi';
 
     // Verify and assign payee alias
+    if (!args.alias) {
+      throw new Error('Alias Required.');
+    }
     const verifyMerchantAlias = verify(args.alias, 'merchantAlias');
     if (verifyMerchantAlias) {
       this.payeeAlias = verifyMerchantAlias;
@@ -26,35 +29,35 @@ class Swish {
       throw new Error('Invalid Payment Request Callback URL. Must be a valid URL that uses https protocol.');
     }
 
-    // Get certificate files
+    const payload = {};
+    // Get certificate file
     if (args.cert) {
       try {
-        this.cert = fs.readFileSync(args.cert);
+        payload.cert = fs.readFileSync(args.cert);
       } catch (error) {
-        this.cert = null;
+        throw Error('Invalid Certificate.');
       }
     }
+
+    // Get key file
     if (args.key) {
       try {
-        this.key = fs.readFileSync(args.key);
+        payload.key = fs.readFileSync(args.key);
       } catch (error) {
-        this.key = null;
+        throw Error('Invalid Key.');
       }
     }
+
+    // Get CA file
     if (args.ca) {
       try {
-        this.ca = fs.readFileSync(args.ca);
+        payload.ca = fs.readFileSync(args.ca);
       } catch (error) {
-        this.ca = null;
+        throw Error('Invalid CA.');
       }
     }
-    this.passphrase = args.password || '';
-    this.httpsAgent = new https.Agent({
-      cert: this.cert,
-      key: this.key,
-      ca: this.ca,
-      passphrase: this.passphrase
-    });
+    payload.passphrase = args.password || '';
+    this.httpsAgent = new https.Agent(payload);
   }
 
   createPaymentRequest(args) {
@@ -115,7 +118,9 @@ class Swish {
           id
         });
       })
-      .catch((error) => reject(new SwishError(error.response.data))));
+      .catch((error) => {
+        reject(new SwishError(error.response.data));
+      }));
   }
 }
 

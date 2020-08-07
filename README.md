@@ -1,5 +1,6 @@
 # Swish For Merchants
-Node.js library for integrating Swish for Merchants. In Progress!
+Node.js library for integrating Swish for Merchants quickly and simply.
+In Progress!
 
 ## API
 ```javascript
@@ -7,12 +8,16 @@ Node.js library for integrating Swish for Merchants. In Progress!
 const Swish = require('swish-merchant');
 
 // Instantiate the class with your details
-const swish = new Swish({
-  alias: 'YOUR_SWISH_FOR_MERCHANTS_ALIAS',
-  paymentRequestCallback: 'YOUR_CALLBACK_URL_FOR_PAYMENT_REQUESTS',
-  cert: 'PATH_TO_YOUR_SWISH_CERT_FILE',
-  key: 'PATH_TO_YOUR_SWISH_KEY_FILE'
-});
+try {
+  const swish = new Swish({
+    alias: 'YOUR_SWISH_FOR_MERCHANTS_ALIAS',
+    paymentRequestCallback: 'YOUR_CALLBACK_URL_FOR_PAYMENT_REQUESTS',
+    cert: 'PATH_TO_YOUR_SWISH_CERT_FILE',
+    key: 'PATH_TO_YOUR_SWISH_KEY_FILE'
+  });
+} catch (error) {
+  // Catch Errors
+}
 
 // Call the methods
 try {
@@ -23,6 +28,6 @@ try {
     payeePaymentReference: 'CUSTOM_REFERENCE'                     // Optional
   });
 } catch (error) {
-  // Catch
+  // Catch Errors
 }
 ```
