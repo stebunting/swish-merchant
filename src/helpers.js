@@ -91,39 +91,49 @@ function helpers() {
         if (typeof thing !== 'string' || !/^[0-9-]*$/.test(thing)) {
           return false;
         }
-        let number = thing.replace(/-/, '');
-        if (number.length !== 10 && number.length !== 12) {
+        let personNummer = thing.replace(/-/, '');
+        if (personNummer.length !== 10 && personNummer.length !== 12) {
           return false;
         }
+
+        // Ensure year is 4 digit
         const yearNow = new Date().getFullYear();
-        if (number.length === 10) {
-          let year = parseInt(`25${number.substring(0, 2)}`, 10);
+        let year;
+        if (personNummer.length === 10) {
+          year = parseInt(`29${personNummer.substring(0, 2)}`, 10);
           while (year > yearNow) {
             year -= 100;
           }
-          number = `${year}${number.substring(2)}`;
+          personNummer = `${year}${personNummer.substring(2)}`;
+        } else {
+          year = parseInt(personNummer.substring(0, 4), 10);
         }
-        if (parseInt(number.substring(0, 4), 10) + 120 <= yearNow) {
+        if (year + 120 <= yearNow) {
           return false;
         }
 
         // Calculate Control Digit
-        let stageOne = '';
-        const num = number.substring(2, 11);
-        for (let i = 0; i < 9; i += 1) {
-          stageOne += parseInt(num.charAt(i), 10) * (((i + 1) % 2) + 1).toString();
+        let num = parseInt(personNummer.substring(2, 11), 10);
+        let controlDigit = 0;
+        let multiplier = 2;
+        while (num > 0) {
+          let product = (num % 10) * multiplier;
+          while (product > 0) {
+            controlDigit += product % 10;
+            product = Math.floor(product / 10);
+          }
+
+          num = Math.floor(num / 10);
+          multiplier = multiplier === 2 ? 1 : 2;
         }
-        let sum = 0;
-        for (let i = 0; i < stageOne.length; i += 1) {
-          sum += parseInt(stageOne[i], 10);
-        }
-        const controlDigit = (10 - (sum % 10)) % 10;
-        if (controlDigit.toString() !== number.substring(11)) {
+        controlDigit = (10 - (controlDigit % 10)) % 10;
+        if (controlDigit !== parseInt(personNummer.substring(11), 10)) {
           return false;
         }
 
-        const re = /^[12][0-9]{3}[01][0-9][0-3][0-9]{5}$/;
-        return re.test(number) ? number : false;
+        // Check final formatting
+        const re = /^(19|2[0-9])[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|30|31)[0-9]{4}$/;
+        return re.test(personNummer) ? personNummer : false;
       }
 
       default:
