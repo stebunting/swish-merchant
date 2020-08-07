@@ -4,10 +4,23 @@
 const assert = require('assert').strict;
 const Swish = require('../src/swish');
 
-describe('Create Payment Request Integration', () => {
-  describe('Payment Request call...', () => {
-    let swish;
+describe('Swish Create Payment Integration Tests', () => {
+  let swish;
+  const classPayload = {
+    alias: '1234679304',
+    cert: 'test/private/test.pem',
+    key: 'test/private/test.key',
+    ca: 'test/private/test-ca.pem',
+    password: 'swish'
+  };
+  const requestPayload = {
+    phoneNumber: '4672242856',
+    amount: 200,
+    message: 'This is a message!',
+    payeePaymentReference: '358792ABC'
+  };
 
+  describe('Create Payment Request call...', () => {
     it('throws on invalid alias', function () {
       try {
         const response = new Swish({ alias: '12346793041' });
@@ -54,7 +67,7 @@ describe('Create Payment Request Integration', () => {
       }
     });
 
-    it('throws on invalid ca', function () {
+    it('throws on invalid CA', function () {
       try {
         const response = new Swish({
           alias: '1234679304',
@@ -68,13 +81,7 @@ describe('Create Payment Request Integration', () => {
     });
 
     it('initiates class', function () {
-      swish = new Swish({
-        alias: '1234679304',
-        cert: 'test/private/test.pem',
-        key: 'test/private/test.key',
-        ca: 'test/private/test-ca.pem',
-        password: 'swish'
-      });
+      swish = new Swish(classPayload);
       assert(true);
 
       // Set URL to Simulator Testing URL
@@ -82,11 +89,9 @@ describe('Create Payment Request Integration', () => {
     });
 
     it('succeeds with valid information', async function () {
-      const response = await swish.createPaymentRequest({
-        phoneNumber: '072242856',
-        amount: '200'
-      });
+      const response = await swish.createPaymentRequest(requestPayload);
       assert(response.success);
+      requestPayload.id = response.id;
     });
 
     it('succeeds with valid message', async function () {
@@ -194,6 +199,51 @@ describe('Create Payment Request Integration', () => {
       } catch (error) {
         assert.equal(error.name, 'Error');
         assert.equal(error.message, 'Invalid Person Nummer. Must be 10 or 12 digits and a valid Swedish Personnummer or Sammordningsnummer.');
+      }
+    });
+  });
+
+  describe('Retrieve Payment Request call...', function () {
+    it('succeeds with valid payload', async function () {
+      const response = await swish.retrievePaymentRequest({
+        id: requestPayload.id
+      });
+      assert(response.success);
+      assert.equal(response.data.id, requestPayload.id);
+      assert.equal(response.data.payerAlias, requestPayload.phoneNumber);
+      assert.equal(response.data.payeeAlias, classPayload.alias);
+      assert.equal(response.data.amount, requestPayload.amount);
+      assert.equal(response.data.message, requestPayload.message);
+      assert.equal(response.data.payeePaymentReference, requestPayload.payeePaymentReference);
+      assert.equal(response.data.currency, 'SEK');
+      assert.equal(response.data.status, 'CREATED');
+      assert.equal(response.data.callbackUrl, swish.paymentRequestCallback);
+      assert.equal(response.data.datePaid, null);
+      assert.equal(response.data.errorCode, null);
+      assert.equal(response.data.errorMessage, null);
+      requestPayload.paymentReference = response.data.paymentReference;
+    });
+
+    it('fails with missing id', async function () {
+      try {
+        await swish.retrievePaymentRequest();
+        assert(false);
+      } catch (error) {
+        assert.equal(error.name, 'Error');
+        assert.equal(error.message, 'ID must be supplied to receive payment request.');
+      }
+    });
+
+    it('fails with invalid id', async function () {
+      try {
+        await swish.retrievePaymentRequest({
+          id: 'INVALIDID'
+        });
+        assert(false);
+      } catch (error) {
+        assert.equal(error.name, 'SwishError');
+        assert.equal(error.errors.length, 1);
+        assert.equal(error.errors[0].errorCode, 'RP04');
       }
     });
   });

@@ -5,6 +5,7 @@ const SwishError = require('./swish-error');
 const { getSwishID, verify } = require('./helpers');
 
 class Swish {
+  // Initiate Swish
   constructor(args = {}) {
     const defaultCallback = 'https://swish-callback.com/';
     this.url = 'https://cpc.getswish.net/swish-cpcapi';
@@ -60,7 +61,8 @@ class Swish {
     this.httpsAgent = new https.Agent(payload);
   }
 
-  createPaymentRequest(args) {
+  // Method to Create Payment Request
+  createPaymentRequest(args = {}) {
     const endpoint = '/api/v2/paymentrequests/';
     const id = getSwishID();
 
@@ -125,6 +127,36 @@ class Swish {
         return resolve({
           success: true,
           id
+        });
+      })
+      .catch((error) => {
+        reject(new SwishError(error.response.data));
+      }));
+  }
+
+  // Method to Retrieve a Payment Request
+  retrievePaymentRequest(args = {}) {
+    const endpoint = '/api/v1/paymentrequests/';
+    if (!args.id) {
+      throw new Error('ID must be supplied to receive payment request.');
+    }
+    const { id } = args;
+
+    // Create API configuration
+    const config = {
+      method: 'get',
+      url: `${this.url}${endpoint}${id}`,
+      httpsAgent: this.httpsAgent
+    };
+
+    return new Promise((resolve, reject) => axios(config)
+      .then((response) => {
+        if (response.status !== 200) {
+          throw Error('Non-200 Error');
+        }
+        return resolve({
+          success: true,
+          data: response.data
         });
       })
       .catch((error) => {
