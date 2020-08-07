@@ -101,10 +101,19 @@ class Swish {
       }
     };
 
+    // Verify and assign optional payee payment reference if applicable
     if (args.payeePaymentReference) {
       config.data.payeePaymentReference = verify(args.payeePaymentReference, 'payeePaymentReference');
       if (config.data.payeePaymentReference === false) {
         throw new Error('Invalid Payee Payment Reference. Must be between 1 and 36 characters and only use a-ö, A-Ö and the numbers 0-9.');
+      }
+    }
+
+    // Verify and assign optional person number
+    if (args.personNummer) {
+      config.data.payerSSN = verify(args.personNummer, 'personNummer');
+      if (config.data.payerSSN === false) {
+        throw new Error('Invalid Person Nummer. Must be 10 or 12 digits and a valid Swedish Personnummer or Sammordningsnummer.');
       }
     }
 

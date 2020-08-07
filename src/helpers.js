@@ -86,6 +86,46 @@ function helpers() {
         return re.test(thing) ? thing : false;
       }
 
+      // Must be 12-digit
+      case 'personNummer': {
+        if (typeof thing !== 'string' || !/^[0-9-]*$/.test(thing)) {
+          return false;
+        }
+        let number = thing.replace(/-/, '');
+        if (number.length !== 10 && number.length !== 12) {
+          return false;
+        }
+        const yearNow = new Date().getFullYear();
+        if (number.length === 10) {
+          let year = parseInt(`25${number.substring(0, 2)}`, 10);
+          while (year > yearNow) {
+            year -= 100;
+          }
+          number = `${year}${number.substring(2)}`;
+        }
+        if (parseInt(number.substring(0, 4), 10) + 120 <= yearNow) {
+          return false;
+        }
+
+        // Calculate Control Digit
+        let stageOne = '';
+        const num = number.substring(2, 11);
+        for (let i = 0; i < 9; i += 1) {
+          stageOne += parseInt(num.charAt(i), 10) * (((i + 1) % 2) + 1).toString();
+        }
+        let sum = 0;
+        for (let i = 0; i < stageOne.length; i += 1) {
+          sum += parseInt(stageOne[i], 10);
+        }
+        const controlDigit = (10 - (sum % 10)) % 10;
+        if (controlDigit.toString() !== number.substring(11)) {
+          return false;
+        }
+
+        const re = /^[12][0-9]{3}[01][0-9][0-3][0-9]{5}$/;
+        return re.test(number) ? number : false;
+      }
+
       default:
         return false;
     }

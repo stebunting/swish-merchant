@@ -216,4 +216,34 @@ describe('Swish Helper Tests', function () {
       assert.equal(verify(undefined, 'payeePaymentReference'), false);
     });
   });
+
+  describe('Personnummer verification...', function () {
+    it('allows numbers of 10 or 12 numbers with hypen', function () {
+      assert.equal(verify('8112189876', 'personNummer'), '198112189876');
+      assert.equal(verify('870912-6760', 'personNummer'), '198709126760');
+      assert.equal(verify('198909191788', 'personNummer'), '198909191788');
+      assert.equal(verify('9902018879', 'personNummer'), '199902018879');
+    });
+
+    it('fails numbers that are older than 120 years', function () {
+      assert.equal(verify('18730909-1572', 'personNummer'), false);
+      assert.equal(verify('19000909-1572', 'personNummer'), false);
+    });
+
+    it('fails numbers with non numerals and hyphens', function () {
+      assert.equal(verify('197212!18879', 'personNummer'), false);
+      assert.equal(verify('197212AB8879', 'personNummer'), false);
+      assert.equal(verify('19721211887$', 'personNummer'), false);
+      assert.equal(verify('{}7212118879', 'personNummer'), false);
+    });
+
+    it('fails numbers that are not strings', function () {
+      assert.equal(verify(198409147892, 'personNummer'), false);
+      assert.equal(verify({ personNummer: '199301015578' }, 'personNummer'), false);
+      assert.equal(verify(['199301015578'], 'personNummer'), false);
+      assert.equal(verify(true, 'personNummer'), false);
+      assert.equal(verify(null, 'personNummer'), false);
+      assert.equal(verify(undefined, 'personNummer'), false);
+    });
+  });
 });

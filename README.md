@@ -25,7 +25,8 @@ try {
     phoneNumber: 'USERS_PHONE_NUMER',                             // Required
     amount: 'AMOUNT_TO_REQUEST',                                  // Required
     message: 'MESSAGE_TO_USER',                                   // Optional
-    payeePaymentReference: 'CUSTOM_REFERENCE'                     // Optional
+    payeePaymentReference: 'CUSTOM_REFERENCE',                    // Optional
+    personNummer: 'USERS_PERSONNUMMER'                            // Optional
   });
 } catch (error) {
   // Catch Errors

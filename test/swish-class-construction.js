@@ -48,18 +48,5 @@ describe('Swish object construction', () => {
       });
       assert.equal(swish.paymentRequestCallback, 'https://swish-callback.com/');
     });
-
-    // it('throws error on missing certificate file', function () {
-    //   let swish;
-    //   assert.throws(() => {
-    //     swish = new Swish({
-    //       alias: '1234567890',
-    //       cert: 'fakelocation'
-    //     });
-    //   }, {
-    //     message: ''
-    //   });
-    //   assert.equal(swish, undefined);
-    // });
   });
 });

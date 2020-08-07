@@ -107,6 +107,15 @@ describe('Create Payment Request Integration', () => {
       assert(response.success);
     });
 
+    it('succeeds with valid personNummer', async function () {
+      const response = await swish.createPaymentRequest({
+        phoneNumber: '0738792',
+        amount: '1',
+        personNummer: '870912-6760'
+      });
+      assert(response.success);
+    });
+
     it('fails with invalid payer alias', async function () {
       try {
         await swish.createPaymentRequest({
@@ -171,6 +180,20 @@ describe('Create Payment Request Integration', () => {
       } catch (error) {
         assert.equal(error.name, 'Error');
         assert.equal(error.message, 'Invalid Payee Payment Reference. Must be between 1 and 36 characters and only use a-ö, A-Ö and the numbers 0-9.');
+      }
+    });
+
+    it('fails with invalid personNummer', async function () {
+      try {
+        await swish.createPaymentRequest({
+          phoneNumber: '0722247583',
+          amount: '100',
+          personNummer: '[INVALIDMESSAGE]'
+        });
+        assert(false);
+      } catch (error) {
+        assert.equal(error.name, 'Error');
+        assert.equal(error.message, 'Invalid Person Nummer. Must be 10 or 12 digits and a valid Swedish Personnummer or Sammordningsnummer.');
       }
     });
   });

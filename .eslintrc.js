@@ -5,11 +5,11 @@ module.exports = {
     mocha: true
   },
   extends: [
-    'airbnb-base',
+    'airbnb-base'
   ],
   parserOptions: {
     ecmaVersion: 11,
-    sourceType: 'module',
+    sourceType: 'module'
   },
   rules: {
     'comma-dangle': 0
