@@ -159,6 +159,41 @@ describe('Swish Helper Tests', function () {
     });
   });
 
+  describe('Age Limit verification...', function () {
+    it('allows numbers or strings between 1 and 99', function () {
+      assert.equal(verify('1', 'ageLimit'), 1);
+      assert.equal(verify('99', 'ageLimit'), 99);
+      assert.equal(verify(45, 'ageLimit'), 45);
+      assert.equal(verify(16.45, 'ageLimit'), 16);
+      assert.equal(verify(79.9999999, 'ageLimit'), 79);
+    });
+
+    it('fails numbers that are less than 1 or more than 99', function () {
+      assert.equal(verify(0.99, 'ageLimit'), false);
+      assert.equal(verify('0.99', 'ageLimit'), false);
+      assert.equal(verify(99.000001, 'ageLimit'), false);
+      assert.equal(verify('100', 'ageLimit'), false);
+      assert.equal(verify('0', 'ageLimit'), false);
+      assert.equal(verify('-4', 'ageLimit'), false);
+      assert.equal(verify('-0.999999', 'ageLimit'), false);
+    });
+
+    it('fails invalid strings', function () {
+      assert.equal(verify('invalid', 'ageLimit'), false);
+      assert.equal(verify('165.34end', 'ageLimit'), false);
+      assert.equal(verify('16L5.23', 'ageLimit'), false);
+      assert.equal(verify('l33t', 'ageLimit'), false);
+    });
+
+    it('fails numbers that are not strings or numbers', function () {
+      assert.equal(verify({ ageLimit: '45' }, 'ageLimit'), false);
+      assert.equal(verify(['45'], 'ageLimit'), false);
+      assert.equal(verify(true, 'ageLimit'), false);
+      assert.equal(verify(null, 'ageLimit'), false);
+      assert.equal(verify(undefined, 'ageLimit'), false);
+    });
+  });
+
   describe('Message verification...', function () {
     it('allows messages up to 50 allowable characters', function () {
       assert.equal(verify('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwx', 'message'), 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwx');

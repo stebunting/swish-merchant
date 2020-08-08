@@ -64,10 +64,23 @@ function helpers() {
         } else {
           return false;
         }
-        if (amount < 1 || amount > 999999999999.99) {
+        return (amount < 1 || amount > 999999999999.99) ? false : amount.toFixed(2);
+      }
+
+      case 'ageLimit': {
+        let amount;
+        if (typeof thing === 'string') {
+          const re = /^[0-9]*$/;
+          if (!re.test(thing)) {
+            return false;
+          }
+          amount = parseFloat(thing, 10);
+        } else if (typeof thing === 'number') {
+          amount = thing;
+        } else {
           return false;
         }
-        return amount.toFixed(2);
+        return (amount < 1 || amount > 99) ? false : Math.floor(amount);
       }
 
       case 'message': {

@@ -7,6 +7,7 @@ In Progress!
 // Require the library
 const Swish = require('swish-merchant');
 
+
 // Instantiate the class with your details
 const swish = new Swish({
   alias: 'YOUR_SWISH_FOR_MERCHANTS_ALIAS',
@@ -15,6 +16,7 @@ const swish = new Swish({
   key: 'PATH_TO_YOUR_SWISH_KEY_FILE'
 }).then((response) => {})
   .catch((error) => {});
+
 
 // Create Payment Request
 swish.createPaymentRequest({
@@ -25,6 +27,7 @@ swish.createPaymentRequest({
   personNummer: 'USERS_PERSONNUMMER'                // Optional
 }).then((data) => {})
   .catch((error) => {});
+
 
 // Retrieve Payment Request
 swish.retrievePaymentRequest({
