@@ -2,3 +2,5 @@
 node_modules
 test/private
 test/create-and-check-request.js
+*.lcov
+.nyc_output

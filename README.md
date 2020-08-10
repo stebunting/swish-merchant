@@ -1,5 +1,7 @@
 # Swish For Merchants
 [![Build Status](https://travis-ci.com/stebunting/swish-merchant.svg?branch=master)](https://travis-ci.com/stebunting/swish-merchant)
+[![codecov](https://codecov.io/gh/stebunting/swish-merchant/branch/master/graph/badge.svg)](https://codecov.io/gh/stebunting/swish-merchant)
+
 Promise-based Node.js library for integrating Swish for Merchants quickly and simply.
 In Progress!
 
@@ -7,7 +9,6 @@ In Progress!
 ```javascript
 // Require the library
 const Swish = require('swish-merchant');
-
 
 // Instantiate the class with your details
 const swish = new Swish({
@@ -18,18 +19,16 @@ const swish = new Swish({
 }).then((response) => {})
   .catch((error) => {});
 
-
 // Create Payment Request
 swish.createPaymentRequest({
   phoneNumber: 'USERS_PHONE_NUMER',                 // Required
   amount: 'AMOUNT_TO_REQUEST',                      // Required
   message: 'MESSAGE_TO_USER',                       // Optional
   payeePaymentReference: 'CUSTOM_REFERENCE',        // Optional
-  personNummer: 'USERS_PERSONNUMMER'                // Optional
+  personNummer: 'USERS_PERSONNUMMER',               // Optional
   ageLimit: 'AGE_LIMIT_FOR_PURCHASE'                // Optional
 }).then((data) => {})
   .catch((error) => {});
-
 
 // Retrieve Payment Request
 swish.retrievePaymentRequest({
