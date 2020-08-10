@@ -3,9 +3,9 @@
 // Requirements
 const assert = require('assert').strict;
 const Swish = require('../src/swish');
-const user = require('./private/credentials');
+// const user = require('./private/credentials');
 
-describe('Create Payment Request Integration', () => {
+describe.skip('Create Payment Request Integration', () => {
   describe('Payment Request call...', () => {
     let swish;
     const payload = {
