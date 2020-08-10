@@ -274,6 +274,15 @@ describe('Swish Helper Tests', function () {
       assert.equal(verify('19000909-1572', 'personNummer'), false);
     });
 
+    it('fails numbers with incorrect control digit', function () {
+      assert.equal(verify('197608186687', 'personNummer'), false);
+    });
+
+    it('fails numbers that are incorrect length', function () {
+      assert.equal(verify('18730909-157', 'personNummer'), false);
+      assert.equal(verify('19000909-15726', 'personNummer'), false);
+    });
+
     it('fails numbers with non numerals and hyphens', function () {
       assert.equal(verify('197212!18879', 'personNummer'), false);
       assert.equal(verify('197212AB8879', 'personNummer'), false);
@@ -288,6 +297,14 @@ describe('Swish Helper Tests', function () {
       assert.equal(verify(true, 'personNummer'), false);
       assert.equal(verify(null, 'personNummer'), false);
       assert.equal(verify(undefined, 'personNummer'), false);
+    });
+  });
+
+  describe('Incorrect Verification Type', function () {
+    it('fails on incorrect verification type', function () {
+      assert.equal(verify('INCORRECT', 'notAType'), false);
+      assert.equal(verify(1674638, 12542), false);
+      assert.equal(verify('200', { type: 'amount' }), false);
     });
   });
 });
