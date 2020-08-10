@@ -119,6 +119,14 @@ class Swish {
       }
     }
 
+    // Verify and assign optional age limit
+    if (args.ageLimit) {
+      config.data.ageLimit = verify(args.ageLimit, 'ageLimit');
+      if (config.data.ageLimit === false) {
+        throw new Error('Invalid Age Limit. Must be an integer between 1 and 99.');
+      }
+    }
+
     return new Promise((resolve, reject) => axios(config)
       .then((response) => {
         if (response.status !== 201) {

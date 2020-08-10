@@ -1,4 +1,5 @@
 # Swish For Merchants
+[![Build Status](https://travis-ci.com/stebunting/swish-merchant.svg?branch=master)](https://travis-ci.com/stebunting/swish-merchant)
 Promise-based Node.js library for integrating Swish for Merchants quickly and simply.
 In Progress!
 
@@ -25,6 +26,7 @@ swish.createPaymentRequest({
   message: 'MESSAGE_TO_USER',                       // Optional
   payeePaymentReference: 'CUSTOM_REFERENCE',        // Optional
   personNummer: 'USERS_PERSONNUMMER'                // Optional
+  ageLimit: 'AGE_LIMIT_FOR_PURCHASE'                // Optional
 }).then((data) => {})
   .catch((error) => {});
 

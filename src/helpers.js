@@ -74,8 +74,8 @@ function helpers() {
           if (!re.test(thing)) {
             return false;
           }
-          amount = parseFloat(thing, 10);
-        } else if (typeof thing === 'number') {
+          amount = parseInt(thing, 10);
+        } else if (typeof thing === 'number' && Number.isInteger(thing)) {
           amount = thing;
         } else {
           return false;

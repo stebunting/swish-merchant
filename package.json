@@ -8,7 +8,11 @@
     "test": "node_modules/mocha/bin/mocha"
   },
   "keywords": [
-    "swish", "merchants", "e-commerce", "api", "integration"
+    "swish",
+    "merchants",
+    "e-commerce",
+    "api",
+    "integration"
   ],
   "author": "Steve Bunting",
   "license": "ISC",

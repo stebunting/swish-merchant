@@ -17,7 +17,8 @@ describe('Swish Create Payment Integration Tests', () => {
     phoneNumber: '4672242856',
     amount: 200,
     message: 'This is a message!',
-    payeePaymentReference: '358792ABC'
+    payeePaymentReference: '358792ABC',
+    ageLimit: 16
   };
 
   describe('Create Payment Request call...', () => {
@@ -199,6 +200,20 @@ describe('Swish Create Payment Integration Tests', () => {
       } catch (error) {
         assert.equal(error.name, 'Error');
         assert.equal(error.message, 'Invalid Person Nummer. Must be 10 or 12 digits and a valid Swedish Personnummer or Sammordningsnummer.');
+      }
+    });
+
+    it('fails with invalid ageLimit', async function () {
+      try {
+        await swish.createPaymentRequest({
+          phoneNumber: '0722247583',
+          amount: '100',
+          ageLimit: 105
+        });
+        assert(false);
+      } catch (error) {
+        assert.equal(error.name, 'Error');
+        assert.equal(error.message, 'Invalid Age Limit. Must be an integer between 1 and 99.');
       }
     });
   });

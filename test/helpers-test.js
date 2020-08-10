@@ -164,18 +164,27 @@ describe('Swish Helper Tests', function () {
       assert.equal(verify('1', 'ageLimit'), 1);
       assert.equal(verify('99', 'ageLimit'), 99);
       assert.equal(verify(45, 'ageLimit'), 45);
-      assert.equal(verify(16.45, 'ageLimit'), 16);
-      assert.equal(verify(79.9999999, 'ageLimit'), 79);
+      assert.equal(verify(16, 'ageLimit'), 16);
+      assert.equal(verify(79, 'ageLimit'), 79);
     });
 
     it('fails numbers that are less than 1 or more than 99', function () {
-      assert.equal(verify(0.99, 'ageLimit'), false);
-      assert.equal(verify('0.99', 'ageLimit'), false);
-      assert.equal(verify(99.000001, 'ageLimit'), false);
+      assert.equal(verify(0, 'ageLimit'), false);
+      assert.equal(verify('0', 'ageLimit'), false);
+      assert.equal(verify(100, 'ageLimit'), false);
       assert.equal(verify('100', 'ageLimit'), false);
       assert.equal(verify('0', 'ageLimit'), false);
       assert.equal(verify('-4', 'ageLimit'), false);
-      assert.equal(verify('-0.999999', 'ageLimit'), false);
+      assert.equal(verify('-1', 'ageLimit'), false);
+    });
+
+    it('fails non-integers', function () {
+      assert.equal(verify('0.99', 'ageLimit'), false);
+      assert.equal(verify('1.1', 'ageLimit'), false);
+      assert.equal(verify(99.1, 'ageLimit'), false);
+      assert.equal(verify(0.9, 'ageLimit'), false);
+      assert.equal(verify(50.5342342, 'ageLimit'), false);
+      assert.equal(verify('24.7', 'ageLimit'), false);
     });
 
     it('fails invalid strings', function () {
