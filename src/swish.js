@@ -123,7 +123,7 @@ class Swish {
     if (args.ageLimit) {
       config.data.ageLimit = verify(args.ageLimit, 'ageLimit');
       if (config.data.ageLimit === false) {
-        throw new Error('Invalid Age Limit. Must be an integer between 1 and 99.');
+        throw new SwishError('Invalid Age Limit. Must be an integer between 1 and 99.');
       }
     }
 

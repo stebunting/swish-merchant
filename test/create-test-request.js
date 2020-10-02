@@ -122,6 +122,51 @@ describe('Swish Create Payment Integration Tests', () => {
       assert(response.success);
     });
 
+    it('fails with invalid payment reference', async function () {
+      try {
+        await swish.createPaymentRequest({
+          phoneNumber: '07876879',
+          amount: '200',
+          message: 'FF08'
+        });
+        assert(false);
+      } catch (error) {
+        assert.equal(error.name, 'SwishError');
+        assert.equal(error.errors.length, 1);
+        assert.equal(error.errors[0].errorCode, 'FF08');
+      }
+    });
+
+    it('fails with invalid callback URL', async function () {
+      try {
+        await swish.createPaymentRequest({
+          phoneNumber: '07876879',
+          amount: '200',
+          message: 'RP03'
+        });
+        assert(false);
+      } catch (error) {
+        assert.equal(error.name, 'SwishError');
+        assert.equal(error.errors.length, 1);
+        assert.equal(error.errors[0].errorCode, 'RP03');
+      }
+    });
+
+    it('fails with invalid payer alias', async function () {
+      try {
+        await swish.createPaymentRequest({
+          phoneNumber: '07876879',
+          amount: '200',
+          message: 'BE18'
+        });
+        assert(false);
+      } catch (error) {
+        assert.equal(error.name, 'SwishError');
+        assert.equal(error.errors.length, 1);
+        assert.equal(error.errors[0].errorCode, 'BE18');
+      }
+    });
+
     it('fails with invalid payer alias', async function () {
       try {
         await swish.createPaymentRequest({
@@ -212,8 +257,9 @@ describe('Swish Create Payment Integration Tests', () => {
         });
         assert(false);
       } catch (error) {
-        assert.equal(error.name, 'Error');
-        assert.equal(error.message, 'Invalid Age Limit. Must be an integer between 1 and 99.');
+        assert.equal(error.name, 'SwishError');
+        assert.equal(error.status, false);
+        assert.equal(error.errors, 'Invalid Age Limit. Must be an integer between 1 and 99.');
       }
     });
   });
