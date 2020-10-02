@@ -13,9 +13,13 @@ describe('Swish object construction', () => {
           alias: 'INVALIDALIAS'
         });
       }, {
-        message: 'Invalid Merchant Alias. Alias must be only numbers, 10 digits long and start with 123.'
+        errors: [{
+          errorCode: '1',
+          errorMessage: 'Invalid Merchant Alias. Alias must be only numbers, 10 digits long and start with 123.',
+          additionalInformation: null
+        }]
       });
-      assert.equal(swish, undefined);
+      assert.strictEqual(swish, undefined);
     });
 
     it('throws error on invalid payment request callback URL', function () {
@@ -26,27 +30,31 @@ describe('Swish object construction', () => {
           paymentRequestCallback: 'INVALIDCALLBACK'
         });
       }, {
-        message: 'Invalid Payment Request Callback URL. Must be a valid URL that uses https protocol.'
+        errors: [{
+          errorCode: '2',
+          errorMessage: 'Invalid Payment Request Callback URL. Must be a valid URL that uses https protocol.',
+          additionalInformation: null
+        }]
       });
-      assert.equal(swish, undefined);
+      assert.strictEqual(swish, undefined);
     });
 
     it('reverts to default payment request callback on no entry', function () {
       let swish;
       swish = new Swish({ alias: '1234567890' });
-      assert.equal(swish.paymentRequestCallback, 'https://swish-callback.com/');
+      assert.strictEqual(swish.paymentRequestCallback, 'https://swish-callback.com/');
 
       swish = new Swish({
         alias: '1234567890',
         paymentRequestCallback: null
       });
-      assert.equal(swish.paymentRequestCallback, 'https://swish-callback.com/');
+      assert.strictEqual(swish.paymentRequestCallback, 'https://swish-callback.com/');
 
       swish = new Swish({
         alias: '1234567890',
         paymentRequestCallback: undefined
       });
-      assert.equal(swish.paymentRequestCallback, 'https://swish-callback.com/');
+      assert.strictEqual(swish.paymentRequestCallback, 'https://swish-callback.com/');
     });
   });
 });

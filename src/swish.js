@@ -12,13 +12,13 @@ class Swish {
 
     // Verify and assign payee alias
     if (!args.alias) {
-      throw new Error('Alias Required.');
+      throw new SwishError('0');
     }
     const verifyMerchantAlias = verify(args.alias, 'merchantAlias');
     if (verifyMerchantAlias) {
       this.payeeAlias = verifyMerchantAlias;
     } else {
-      throw new Error('Invalid Merchant Alias. Alias must be only numbers, 10 digits long and start with 123.');
+      throw new SwishError('1');
     }
 
     // Verify and assign payment request callback URL
@@ -27,7 +27,7 @@ class Swish {
     if (verifyCallbackUrl) {
       this.paymentRequestCallback = verifyCallbackUrl;
     } else {
-      throw new Error('Invalid Payment Request Callback URL. Must be a valid URL that uses https protocol.');
+      throw new SwishError('2');
     }
 
     const payload = {};
@@ -36,7 +36,7 @@ class Swish {
       try {
         payload.cert = fs.readFileSync(args.cert);
       } catch (error) {
-        throw Error('Invalid Certificate.');
+        throw new SwishError('3');
       }
     }
 
@@ -45,7 +45,7 @@ class Swish {
       try {
         payload.key = fs.readFileSync(args.key);
       } catch (error) {
-        throw Error('Invalid Key.');
+        throw new SwishError('4');
       }
     }
 
@@ -54,7 +54,7 @@ class Swish {
       try {
         payload.ca = fs.readFileSync(args.ca);
       } catch (error) {
-        throw Error('Invalid CA.');
+        throw new SwishError('5');
       }
     }
     payload.passphrase = args.password || '';
@@ -70,19 +70,19 @@ class Swish {
     // Verify and assign amount
     const amount = verify(args.amount, 'amount');
     if (amount === false) {
-      throw new Error('Invalid Amount. Must be a valid amount between 1 and 999999999999.99 SEK.');
+      throw new SwishError('6');
     }
 
     // Verify and assign payer alias
     const payerAlias = verify(args.phoneNumber, 'payerAlias');
     if (payerAlias === false) {
-      throw new Error('Invalid Phone Number. Must be a valid Swedish phone number between 8 and 15 numerals (including country code and no leading zeros.');
+      throw new SwishError('7');
     }
 
     // Verify and assign message (blank by default)
     const message = verify(args.message || '', 'message');
     if (message === false) {
-      throw new Error('Invalid Message. Must be less than 50 characters and only use a-ö, A-Ö, the numbers 0-9 and the special characters :;.,?!()”.');
+      throw new SwishError('8');
     }
 
     // Create API configuration
@@ -107,7 +107,7 @@ class Swish {
     if (args.payeePaymentReference) {
       config.data.payeePaymentReference = verify(args.payeePaymentReference, 'payeePaymentReference');
       if (config.data.payeePaymentReference === false) {
-        throw new Error('Invalid Payee Payment Reference. Must be between 1 and 36 characters and only use a-ö, A-Ö and the numbers 0-9.');
+        throw new SwishError('10');
       }
     }
 
@@ -115,7 +115,7 @@ class Swish {
     if (args.personNummer) {
       config.data.payerSSN = verify(args.personNummer, 'personNummer');
       if (config.data.payerSSN === false) {
-        throw new Error('Invalid Person Nummer. Must be 10 or 12 digits and a valid Swedish Personnummer or Sammordningsnummer.');
+        throw new SwishError('11');
       }
     }
 
@@ -123,14 +123,14 @@ class Swish {
     if (args.ageLimit) {
       config.data.ageLimit = verify(args.ageLimit, 'ageLimit');
       if (config.data.ageLimit === false) {
-        throw new SwishError('Invalid Age Limit. Must be an integer between 1 and 99.');
+        throw new SwishError('9');
       }
     }
 
     return new Promise((resolve, reject) => axios(config)
       .then((response) => {
         if (response.status !== 201) {
-          throw Error('Non-201 Error');
+          throw SwishError('12');
         }
         return resolve({
           success: true,
@@ -138,7 +138,7 @@ class Swish {
         });
       })
       .catch((error) => {
-        reject(new SwishError(error.response.data));
+        reject(new SwishError(error.response.data[0].errorCode));
       }));
   }
 
@@ -146,7 +146,7 @@ class Swish {
   retrievePaymentRequest(args = {}) {
     const endpoint = '/api/v1/paymentrequests/';
     if (!args.id) {
-      throw new Error('ID must be supplied to receive payment request.');
+      throw new SwishError('13');
     }
     const { id } = args;
 
@@ -160,7 +160,7 @@ class Swish {
     return new Promise((resolve, reject) => axios(config)
       .then((response) => {
         if (response.status !== 200) {
-          throw Error('Non-200 Error');
+          throw SwishError('14');
         }
         return resolve({
           success: true,
@@ -168,7 +168,7 @@ class Swish {
         });
       })
       .catch((error) => {
-        reject(new SwishError(error.response.data));
+        reject(new SwishError(error.response.data[0].errorCode));
       }));
   }
 }
