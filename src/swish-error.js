@@ -1,5 +1,5 @@
 class SwishError extends Error {
-  constructor(code, ...params) {
+  constructor(codes, ...params) {
     super(...params);
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, SwishError);
@@ -7,11 +7,14 @@ class SwishError extends Error {
 
     this.name = 'SwishError';
     this.status = false;
-    this.errors = [{
-      errorCode: code,
-      errorMessage: SwishError.lookupMessage(code),
-      additionalInformation: null
-    }];
+    this.errors = [];
+    codes.forEach((code) => {
+      this.errors.push({
+        errorCode: code,
+        errorMessage: SwishError.lookupMessage(code),
+        additionalInformation: null
+      });
+    });
   }
 
   static lookupMessage(code) {
