@@ -12,13 +12,13 @@ class Swish {
 
     // Verify and assign payee alias
     if (!args.alias) {
-      throw new SwishError('0');
+      throw new SwishError('VL01');
     }
     const verifyMerchantAlias = verify(args.alias, 'merchantAlias');
     if (verifyMerchantAlias) {
       this.payeeAlias = verifyMerchantAlias;
     } else {
-      throw new SwishError('1');
+      throw new SwishError('VL02');
     }
 
     // Verify and assign payment request callback URL
@@ -27,34 +27,46 @@ class Swish {
     if (verifyCallbackUrl) {
       this.paymentRequestCallback = verifyCallbackUrl;
     } else {
-      throw new SwishError('2');
+      throw new SwishError('RP03');
     }
 
     const payload = {};
     // Get certificate file
     if (args.cert) {
-      try {
-        payload.cert = fs.readFileSync(args.cert);
-      } catch (error) {
-        throw new SwishError('3');
+      if (args.cert.length >= 1264) {
+        payload.cert = args.cert;
+      } else {
+        try {
+          payload.cert = fs.readFileSync(args.cert);
+        } catch (error) {
+          throw new SwishError('VL03');
+        }
       }
     }
 
     // Get key file
     if (args.key) {
-      try {
-        payload.key = fs.readFileSync(args.key);
-      } catch (error) {
-        throw new SwishError('4');
+      if (args.key.length >= 1264) {
+        payload.key = args.key;
+      } else {
+        try {
+          payload.key = fs.readFileSync(args.key);
+        } catch (error) {
+          throw new SwishError('VL04');
+        }
       }
     }
 
     // Get CA file
     if (args.ca) {
-      try {
-        payload.ca = fs.readFileSync(args.ca);
-      } catch (error) {
-        throw new SwishError('5');
+      if (args.ca.length >= 1264) {
+        payload.ca = args.ca;
+      } else {
+        try {
+          payload.ca = fs.readFileSync(args.ca);
+        } catch (error) {
+          throw new SwishError('VL05');
+        }
       }
     }
     payload.passphrase = args.password || '';
@@ -70,19 +82,19 @@ class Swish {
     // Verify and assign amount
     const amount = verify(args.amount, 'amount');
     if (amount === false) {
-      throw new SwishError('6');
+      throw new SwishError('PA02');
     }
 
     // Verify and assign payer alias
     const payerAlias = verify(args.phoneNumber, 'payerAlias');
     if (payerAlias === false) {
-      throw new SwishError('7');
+      throw new SwishError('VL10');
     }
 
     // Verify and assign message (blank by default)
     const message = verify(args.message || '', 'message');
     if (message === false) {
-      throw new SwishError('8');
+      throw new SwishError('VL11');
     }
 
     // Create API configuration
@@ -107,7 +119,7 @@ class Swish {
     if (args.payeePaymentReference) {
       config.data.payeePaymentReference = verify(args.payeePaymentReference, 'payeePaymentReference');
       if (config.data.payeePaymentReference === false) {
-        throw new SwishError('10');
+        throw new SwishError('VL13');
       }
     }
 
@@ -115,7 +127,7 @@ class Swish {
     if (args.personNummer) {
       config.data.payerSSN = verify(args.personNummer, 'personNummer');
       if (config.data.payerSSN === false) {
-        throw new SwishError('11');
+        throw new SwishError('VL14');
       }
     }
 
@@ -123,14 +135,14 @@ class Swish {
     if (args.ageLimit) {
       config.data.ageLimit = verify(args.ageLimit, 'ageLimit');
       if (config.data.ageLimit === false) {
-        throw new SwishError('9');
+        throw new SwishError('VL12');
       }
     }
 
     return new Promise((resolve, reject) => axios(config)
       .then((response) => {
         if (response.status !== 201) {
-          throw SwishError('12');
+          throw SwishError('VL17');
         }
         return resolve({
           success: true,
@@ -146,7 +158,7 @@ class Swish {
   retrievePaymentRequest(args = {}) {
     const endpoint = '/api/v1/paymentrequests/';
     if (!args.id) {
-      throw new SwishError('13');
+      throw new SwishError('VL15');
     }
     const { id } = args;
 
@@ -160,7 +172,7 @@ class Swish {
     return new Promise((resolve, reject) => axios(config)
       .then((response) => {
         if (response.status !== 200) {
-          throw SwishError('14');
+          throw SwishError('VL16');
         }
         return resolve({
           success: true,

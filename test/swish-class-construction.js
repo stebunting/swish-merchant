@@ -3,18 +3,24 @@
 // Requirements
 const assert = require('assert').strict;
 const Swish = require('../src/swish');
+const stringCerts = require('./private/testStrings.js');
 
 describe('Swish object construction', () => {
+  let swish;
+
+  beforeEach('reset swish', function () {
+    swish = undefined;
+  });
+
   describe('Constructor Tests', () => {
     it('throws error on invalid merchant alias', function () {
-      let swish;
       assert.throws(() => {
         swish = new Swish({
           alias: 'INVALIDALIAS'
         });
       }, {
         errors: [{
-          errorCode: '1',
+          errorCode: 'VL02',
           errorMessage: 'Invalid Merchant Alias. Alias must be only numbers, 10 digits long and start with 123.',
           additionalInformation: null
         }]
@@ -23,7 +29,6 @@ describe('Swish object construction', () => {
     });
 
     it('throws error on invalid payment request callback URL', function () {
-      let swish;
       assert.throws(() => {
         swish = new Swish({
           alias: '1234567890',
@@ -31,8 +36,8 @@ describe('Swish object construction', () => {
         });
       }, {
         errors: [{
-          errorCode: '2',
-          errorMessage: 'Invalid Payment Request Callback URL. Must be a valid URL that uses https protocol.',
+          errorCode: 'RP03',
+          errorMessage: 'Callback URL is missing or does not use HTTPS',
           additionalInformation: null
         }]
       });
@@ -40,7 +45,6 @@ describe('Swish object construction', () => {
     });
 
     it('reverts to default payment request callback on no entry', function () {
-      let swish;
       swish = new Swish({ alias: '1234567890' });
       assert.strictEqual(swish.paymentRequestCallback, 'https://swish-callback.com/');
 
@@ -55,6 +59,23 @@ describe('Swish object construction', () => {
         paymentRequestCallback: undefined
       });
       assert.strictEqual(swish.paymentRequestCallback, 'https://swish-callback.com/');
+    });
+
+    it('constructs with string certs', async function () {
+      swish = new Swish({
+        alias: '1234567890',
+        cert: stringCerts.cert,
+        key: stringCerts.key,
+        ca: stringCerts.ca,
+        password: 'swish'
+      });
+      swish.url = 'https://mss.cpc.getswish.net/swish-cpcapi';
+
+      const response = await swish.createPaymentRequest({
+        phoneNumber: '0722667587',
+        amount: 200
+      });
+      assert(response.success);
     });
   });
 });

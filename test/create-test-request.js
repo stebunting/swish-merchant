@@ -4,8 +4,7 @@
 const assert = require('assert').strict;
 const Swish = require('../src/swish');
 
-describe('Swish Create Payment Integration Tests', () => {
-  let swish;
+describe('Swish Class Unit Tests', () => {
   const classPayload = {
     alias: '1234679304',
     cert: 'test/private/test.pem',
@@ -13,40 +12,33 @@ describe('Swish Create Payment Integration Tests', () => {
     ca: 'test/private/test-ca.pem',
     password: 'swish'
   };
-  const requestPayload = {
-    phoneNumber: '4672242856',
-    amount: 200,
-    message: 'This is a message!',
-    payeePaymentReference: '358792ABC',
-    ageLimit: 16
-  };
 
-  describe('Create Payment Request call...', () => {
-    it('throws on invalid alias', function () {
-      try {
-        const response = new Swish({ alias: '12346793041' });
-        assert.strictEqual(response.success, false);
-      } catch (error) {
-        assert.strictEqual(error.name, 'SwishError');
-        assert.strictEqual(error.errors.length, 1);
-        assert.strictEqual(error.errors[0].errorCode, '1');
-        assert.strictEqual(error.errors[0].errorMessage, 'Invalid Merchant Alias. Alias must be only numbers, 10 digits long and start with 123.');
-      }
-    });
-
-    it('throws on missing alias', function () {
+  describe('Creating Swish Object throws SwishError...', () => {
+    it('on missing alias', function () {
       try {
         const response = new Swish();
         assert.strictEqual(response.success, false);
       } catch (error) {
         assert.strictEqual(error.name, 'SwishError');
         assert.strictEqual(error.errors.length, 1);
-        assert.strictEqual(error.errors[0].errorCode, '0');
+        assert.strictEqual(error.errors[0].errorCode, 'VL01');
         assert.strictEqual(error.errors[0].errorMessage, 'Alias Required.');
       }
     });
 
-    it('throws on invalid certificate', function () {
+    it('on invalid alias', function () {
+      try {
+        const response = new Swish({ alias: '12346793041' });
+        assert.strictEqual(response.success, false);
+      } catch (error) {
+        assert.strictEqual(error.name, 'SwishError');
+        assert.strictEqual(error.errors.length, 1);
+        assert.strictEqual(error.errors[0].errorCode, 'VL02');
+        assert.strictEqual(error.errors[0].errorMessage, 'Invalid Merchant Alias. Alias must be only numbers, 10 digits long and start with 123.');
+      }
+    });
+
+    it('on invalid certificate', function () {
       try {
         const response = new Swish({
           alias: '1234679304',
@@ -56,12 +48,12 @@ describe('Swish Create Payment Integration Tests', () => {
       } catch (error) {
         assert.strictEqual(error.name, 'SwishError');
         assert.strictEqual(error.errors.length, 1);
-        assert.strictEqual(error.errors[0].errorCode, '3');
+        assert.strictEqual(error.errors[0].errorCode, 'VL03');
         assert.strictEqual(error.errors[0].errorMessage, 'Invalid Certificate.');
       }
     });
 
-    it('throws on invalid key', function () {
+    it('on invalid key', function () {
       try {
         const response = new Swish({
           alias: '1234679304',
@@ -71,12 +63,12 @@ describe('Swish Create Payment Integration Tests', () => {
       } catch (error) {
         assert.strictEqual(error.name, 'SwishError');
         assert.strictEqual(error.errors.length, 1);
-        assert.strictEqual(error.errors[0].errorCode, '4');
+        assert.strictEqual(error.errors[0].errorCode, 'VL04');
         assert.strictEqual(error.errors[0].errorMessage, 'Invalid Key.');
       }
     });
 
-    it('throws on invalid CA', function () {
+    it('on invalid CA', function () {
       try {
         const response = new Swish({
           alias: '1234679304',
@@ -86,12 +78,17 @@ describe('Swish Create Payment Integration Tests', () => {
       } catch (error) {
         assert.strictEqual(error.name, 'SwishError');
         assert.strictEqual(error.errors.length, 1);
-        assert.strictEqual(error.errors[0].errorCode, '5');
+        assert.strictEqual(error.errors[0].errorCode, 'VL05');
         assert.strictEqual(error.errors[0].errorMessage, 'Invalid CA.');
       }
     });
+  });
 
-    it('initiates class', function () {
+  describe('Create Payment Request call...', () => {
+    let swish;
+    let requestPayload;
+
+    before('initiates class', function () {
       swish = new Swish(classPayload);
       assert(true);
 
@@ -99,10 +96,19 @@ describe('Swish Create Payment Integration Tests', () => {
       swish.url = 'https://mss.cpc.getswish.net/swish-cpcapi';
     });
 
+    beforeEach('initialise payload', function () {
+      requestPayload = {
+        phoneNumber: '4672242856',
+        amount: 200,
+        message: 'This is a message!',
+        payeePaymentReference: '358792ABC',
+        ageLimit: 16
+      };
+    });
+
     it('succeeds with valid information', async function () {
       const response = await swish.createPaymentRequest(requestPayload);
       assert(response.success);
-      requestPayload.id = response.id;
     });
 
     it('succeeds with valid message', async function () {
@@ -160,7 +166,7 @@ describe('Swish Create Payment Integration Tests', () => {
         assert.strictEqual(error.name, 'SwishError');
         assert.strictEqual(error.errors.length, 1);
         assert.strictEqual(error.errors[0].errorCode, 'RP03');
-        assert.strictEqual(error.errors[0].errorMessage, 'Callback URL is missing or does not use Https');
+        assert.strictEqual(error.errors[0].errorMessage, 'Callback URL is missing or does not use HTTPS');
       }
     });
 
@@ -190,7 +196,7 @@ describe('Swish Create Payment Integration Tests', () => {
       } catch (error) {
         assert.strictEqual(error.name, 'SwishError');
         assert.strictEqual(error.errors.length, 1);
-        assert.strictEqual(error.errors[0].errorCode, '7');
+        assert.strictEqual(error.errors[0].errorCode, 'VL10');
         assert.strictEqual(error.errors[0].errorMessage, 'Invalid Phone Number. Must be a valid Swedish phone number between 8 and 15 numerals (including country code and no leading zeros.');
       }
     });
@@ -205,8 +211,8 @@ describe('Swish Create Payment Integration Tests', () => {
       } catch (error) {
         assert.strictEqual(error.name, 'SwishError');
         assert.strictEqual(error.errors.length, 1);
-        assert.strictEqual(error.errors[0].errorCode, '6');
-        assert.strictEqual(error.errors[0].errorMessage, 'Invalid Amount. Must be a valid amount between 1 and 999999999999.99 SEK.');
+        assert.strictEqual(error.errors[0].errorCode, 'PA02');
+        assert.strictEqual(error.errors[0].errorMessage, 'Amount value is missing or not a valid number.');
       }
     });
 
@@ -220,8 +226,8 @@ describe('Swish Create Payment Integration Tests', () => {
       } catch (error) {
         assert.strictEqual(error.name, 'SwishError');
         assert.strictEqual(error.errors.length, 1);
-        assert.strictEqual(error.errors[0].errorCode, '6');
-        assert.strictEqual(error.errors[0].errorMessage, 'Invalid Amount. Must be a valid amount between 1 and 999999999999.99 SEK.');
+        assert.strictEqual(error.errors[0].errorCode, 'PA02');
+        assert.strictEqual(error.errors[0].errorMessage, 'Amount value is missing or not a valid number.');
       }
     });
 
@@ -236,7 +242,7 @@ describe('Swish Create Payment Integration Tests', () => {
       } catch (error) {
         assert.strictEqual(error.name, 'SwishError');
         assert.strictEqual(error.errors.length, 1);
-        assert.strictEqual(error.errors[0].errorCode, '8');
+        assert.strictEqual(error.errors[0].errorCode, 'VL11');
         assert.strictEqual(error.errors[0].errorMessage, 'Invalid Message. Must be less than 50 characters and only use a-ö, A-Ö, the numbers 0-9 and the special characters :;.,?!()”.');
       }
     });
@@ -252,7 +258,7 @@ describe('Swish Create Payment Integration Tests', () => {
       } catch (error) {
         assert.strictEqual(error.name, 'SwishError');
         assert.strictEqual(error.errors.length, 1);
-        assert.strictEqual(error.errors[0].errorCode, '10');
+        assert.strictEqual(error.errors[0].errorCode, 'VL13');
         assert.strictEqual(error.errors[0].errorMessage, 'Invalid Payee Payment Reference. Must be between 1 and 36 characters and only use a-ö, A-Ö and the numbers 0-9.');
       }
     });
@@ -268,7 +274,7 @@ describe('Swish Create Payment Integration Tests', () => {
       } catch (error) {
         assert.strictEqual(error.name, 'SwishError');
         assert.strictEqual(error.errors.length, 1);
-        assert.strictEqual(error.errors[0].errorCode, '11');
+        assert.strictEqual(error.errors[0].errorCode, 'VL14');
         assert.strictEqual(error.errors[0].errorMessage, 'Invalid Person Nummer. Must be 10 or 12 digits and a valid Swedish Personnummer or Sammordningsnummer.');
       }
     });
@@ -284,28 +290,50 @@ describe('Swish Create Payment Integration Tests', () => {
       } catch (error) {
         assert.strictEqual(error.name, 'SwishError');
         assert.strictEqual(error.errors.length, 1);
-        assert.strictEqual(error.errors[0].errorCode, '9');
+        assert.strictEqual(error.errors[0].errorCode, 'VL12');
         assert.strictEqual(error.errors[0].errorMessage, 'Invalid Age Limit. Must be an integer between 1 and 99.');
       }
     });
   });
 
   describe('Retrieve Payment Request call...', function () {
+    let swish;
+    let requestPayload;
+    const transactionId = '41BA2B7B71A1456EA7A9676F0C18F39B';
+
+    before('initiates class', function () {
+      swish = new Swish(classPayload);
+      assert(true);
+
+      // Set URL to Simulator Testing URL
+      swish.url = 'https://mss.cpc.getswish.net/swish-cpcapi';
+    });
+
+    beforeEach('initialise payload', function () {
+      requestPayload = {
+        phoneNumber: '4672242856',
+        amount: 200,
+        message: 'This is a message!',
+        payeePaymentReference: '358792ABC',
+        ageLimit: 16
+      };
+    });
+
     it('succeeds with valid payload', async function () {
       const response = await swish.retrievePaymentRequest({
-        id: requestPayload.id
+        id: transactionId
       });
       assert(response.success);
-      assert.strictEqual(response.data.id, requestPayload.id);
+      assert.strictEqual(response.data.id, transactionId);
       assert.strictEqual(response.data.payerAlias, requestPayload.phoneNumber);
       assert.strictEqual(response.data.payeeAlias, classPayload.alias);
       assert.strictEqual(response.data.amount, requestPayload.amount);
       assert.strictEqual(response.data.message, requestPayload.message);
       assert.strictEqual(response.data.payeePaymentReference, requestPayload.payeePaymentReference);
       assert.strictEqual(response.data.currency, 'SEK');
-      assert.strictEqual(response.data.status, 'CREATED');
+      assert.strictEqual(response.data.status, 'PAID');
       assert.strictEqual(response.data.callbackUrl, swish.paymentRequestCallback);
-      assert.strictEqual(response.data.datePaid, null);
+      assert.strictEqual(response.data.datePaid, '2020-10-03T07:10:54.372Z');
       assert.strictEqual(response.data.errorCode, null);
       assert.strictEqual(response.data.errorMessage, null);
       requestPayload.paymentReference = response.data.paymentReference;
@@ -318,7 +346,7 @@ describe('Swish Create Payment Integration Tests', () => {
       } catch (error) {
         assert.strictEqual(error.name, 'SwishError');
         assert.strictEqual(error.errors.length, 1);
-        assert.strictEqual(error.errors[0].errorCode, '13');
+        assert.strictEqual(error.errors[0].errorCode, 'VL15');
         assert.strictEqual(error.errors[0].errorMessage, 'ID must be supplied to receive payment request.');
       }
     });
@@ -335,6 +363,49 @@ describe('Swish Create Payment Integration Tests', () => {
         assert.strictEqual(error.errors[0].errorCode, 'RP04');
         assert.strictEqual(error.errors[0].errorMessage, 'No payment request found related to a token');
       }
+    });
+  });
+
+  describe('Integration Test', () => {
+    let swish;
+    let requestPayload;
+
+    before('initiates class', function () {
+      swish = new Swish(classPayload);
+      assert(true);
+
+      // Set URL to Simulator Testing URL
+      swish.url = 'https://mss.cpc.getswish.net/swish-cpcapi';
+    });
+
+    beforeEach('initialise payload', function () {
+      requestPayload = {
+        phoneNumber: '46733887459',
+        amount: 950,
+        message: 'Integration Message',
+        payeePaymentReference: 'A674BC09',
+        ageLimit: 22
+      };
+    });
+
+    it('Creates and retrieves request', async function () {
+      const postRes = await swish.createPaymentRequest(requestPayload);
+      const getRes = await swish.retrievePaymentRequest({
+        id: postRes.id
+      });
+      assert(getRes.success);
+      assert.strictEqual(getRes.data.id, postRes.id);
+      assert.strictEqual(getRes.data.payerAlias, requestPayload.phoneNumber);
+      assert.strictEqual(getRes.data.payeeAlias, classPayload.alias);
+      assert.strictEqual(getRes.data.amount, requestPayload.amount);
+      assert.strictEqual(getRes.data.message, requestPayload.message);
+      assert.strictEqual(getRes.data.payeePaymentReference, requestPayload.payeePaymentReference);
+      assert.strictEqual(getRes.data.currency, 'SEK');
+      assert.strictEqual(getRes.data.status, 'CREATED');
+      assert.strictEqual(getRes.data.callbackUrl, swish.paymentRequestCallback);
+      assert.strictEqual(getRes.data.datePaid, null);
+      assert.strictEqual(getRes.data.errorCode, null);
+      assert.strictEqual(getRes.data.errorMessage, null);
     });
   });
 });
