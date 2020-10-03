@@ -48,7 +48,7 @@ class SwishError extends Error {
         return 'No payment request found related to a token';
 
       case 'RP06':
-        return 'A payment request already exists for that payer. Only applicable for Swish e-commerce.';
+        return 'A payment request already exists for that payer.';
 
       case 'ACMT03':
         return 'Payer not Enrolled.';
@@ -99,14 +99,9 @@ class SwishError extends Error {
       case 'VL15':
         return 'ID must be supplied to receive payment request.';
 
-      case 'VL16':
-        return 'Non-200 Error';
-
-      case 'VL17':
-        return 'Non-201 Error';
-
+      case 'X1':
       default:
-        return '';
+        return 'Unexpected Error';
     }
   }
 }

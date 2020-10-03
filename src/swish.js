@@ -1,7 +1,7 @@
 const axios = require('axios');
 const fs = require('fs');
 const https = require('https');
-const SwishError = require('./swish-error');
+const SwishError = require('./swishError');
 const { getSwishID, verify } = require('./helpers');
 
 class Swish {
@@ -12,7 +12,7 @@ class Swish {
 
     // Verify and assign payee alias
     if (!args.alias) {
-      throw new SwishError(['VL01']);
+      throw new SwishError(['RP01']);
     }
     const verifyMerchantAlias = verify(args.alias, 'merchantAlias');
     if (verifyMerchantAlias) {
@@ -142,7 +142,7 @@ class Swish {
     return new Promise((resolve, reject) => axios(config)
       .then((response) => {
         if (response.status !== 201) {
-          throw SwishError(['VL17']);
+          throw SwishError(['X1']);
         }
         return resolve({
           success: true,
@@ -172,7 +172,7 @@ class Swish {
     return new Promise((resolve, reject) => axios(config)
       .then((response) => {
         if (response.status !== 200) {
-          throw SwishError(['VL16']);
+          throw SwishError(['X1']);
         }
         return resolve({
           success: true,
