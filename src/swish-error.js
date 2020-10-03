@@ -69,9 +69,6 @@ class SwishError extends Error {
         return 'Amount value is missing or not a valid number.';
 
       // Validation Errors
-      case 'VL01':
-        return 'Alias Required.';
-
       case 'VL02':
         return 'Invalid Merchant Alias. Alias must be only numbers, 10 digits long and start with 123.';
 

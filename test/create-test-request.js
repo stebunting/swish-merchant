@@ -33,8 +33,8 @@ describe('Swish Class Unit Tests', () => {
       } catch (error) {
         assert.strictEqual(error.name, 'SwishError');
         assert.strictEqual(error.errors.length, 1);
-        assert.strictEqual(error.errors[0].errorCode, 'VL02');
-        assert.strictEqual(error.errors[0].errorMessage, 'Invalid Merchant Alias. Alias must be only numbers, 10 digits long and start with 123.');
+        assert.strictEqual(error.errors[0].errorCode, 'RP01');
+        assert.strictEqual(error.errors[0].errorMessage, 'Missing Merchant Swish Number.');
       }
     });
 
