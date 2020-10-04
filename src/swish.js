@@ -183,6 +183,62 @@ class Swish {
         reject(new SwishError(error.response.data.map((x) => x.errorCode)));
       }));
   }
+
+  createRefundRequest(args = {}) {
+    const endpoint = '/api/v2/refunds/';
+    const id = getSwishID();
+
+    // User provided required values
+    // Verify and assign amount
+    const amount = verify(args.amount, 'amount');
+    if (amount === false) {
+      throw new SwishError(['PA02']);
+    }
+
+    // Verify and assign original payment reference
+    const originalPaymentReference = verify(args.originalPaymentReference, 'uuid');
+    if (originalPaymentReference === false) {
+      throw new SwishError(['FF08']);
+    }
+
+    // Verify and assign message (blank by default)
+    const message = verify(args.message || '', 'message');
+    if (message === false) {
+      throw new SwishError(['VL11']);
+    }
+
+    // Create API configuration
+    const config = {
+      method: 'put',
+      url: `${this.url}${endpoint}${id}`,
+      httpsAgent: this.httpsAgent,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        callbackUrl: this.paymentRequestCallback,
+        payerAlias: this.payeeAlias,
+        currency: 'SEK',
+        amount,
+        message,
+        originalPaymentReference: args.originalPaymentReference
+      }
+    };
+
+    return new Promise((resolve, reject) => axios(config)
+      .then((response) => {
+        if (response.status !== 201) {
+          throw SwishError(['X1']);
+        }
+        return resolve({
+          success: true,
+          id
+        });
+      })
+      .catch((error) => {
+        reject(new SwishError(error.response.data.map((x) => x.errorCode)));
+      }));
+  }
 }
 
 module.exports = Swish;

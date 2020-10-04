@@ -25,6 +25,9 @@ class SwishError extends Error {
       case 'RP03':
         return 'Callback URL is missing or does not use HTTPS';
 
+      case 'PA02':
+        return 'Amount value is missing or not a valid number.';
+
       case 'BE18':
         return 'Payer alias is invalid';
 
@@ -63,9 +66,6 @@ class SwishError extends Error {
 
       case 'VR02':
         return 'The payer alias in the request is not enroled in swish with the supplied ssn';
-
-      case 'PA02':
-        return 'Amount value is missing or not a valid number.';
 
       // Validation Errors
       case 'VL02':

@@ -262,6 +262,35 @@ describe('Helpers comprise...', function () {
       });
     });
 
+    describe('UUID / Payment Reference by...', function () {
+      it('allowing hex numbers of 32 characters', function () {
+        assert.strictEqual(verify('0123456789ABCDEF0123456789abcdef', 'uuid'), '0123456789ABCDEF0123456789abcdef');
+        assert.strictEqual(verify('00000000000000000000000000000000', 'uuid'), '00000000000000000000000000000000');
+        assert.strictEqual(verify('AaBbCcDdEeFf123456ABCDEFABCDEF97', 'uuid'), 'AaBbCcDdEeFf123456ABCDEFABCDEF97');
+      });
+
+      it('failing numbers with less/more than 32 characters', function () {
+        assert.strictEqual(verify('0123456789ABCDEF0123456789abcde', 'uuid'), false);
+        assert.strictEqual(verify('0123456789ABCDEF0123456789abcdef0', 'uuid'), false);
+        assert.strictEqual(verify('12', 'uuid'), false);
+      });
+
+      it('failing numbers with disallowed characters', function () {
+        assert.strictEqual(verify('0123456789ABCDEF0123456789abcdeg', 'uuid'), false);
+        assert.strictEqual(verify('0123456789ABCDEF!123456789abcdef', 'uuid'), false);
+        assert.strictEqual(verify('0123456789ABCDEF!123456789abcdeZ', 'uuid'), false);
+      });
+
+      it('failing messages that are not strings', function () {
+        assert.strictEqual(verify(12351234, 'uuid'), false);
+        assert.strictEqual(verify({ payeePaymentReference: '0123456789ABCDEF0123456789abcdef' }, 'uuid'), false);
+        assert.strictEqual(verify(['ref'], 'uuid'), false);
+        assert.strictEqual(verify(true, 'uuid'), false);
+        assert.strictEqual(verify(null, 'uuid'), false);
+        assert.strictEqual(verify(undefined, 'uuid'), false);
+      });
+    });
+
     describe('Personnummer by...', function () {
       it('allowing numbers of 10 or 12 numbers with hypen', function () {
         assert.strictEqual(verify('8112189876', 'personNummer'), '198112189876');
