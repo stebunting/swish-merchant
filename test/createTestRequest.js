@@ -86,7 +86,6 @@ describe('Swish Class...', () => {
             message: 'BE18'
           }), {
             name: 'SwishError',
-            status: false,
             errors: [{
               errorCode: 'BE18',
               errorMessage: 'Payer alias is invalid',
@@ -104,7 +103,6 @@ describe('Swish Class...', () => {
             message: 'RP03'
           }), {
             name: 'SwishError',
-            status: false,
             errors: [{
               errorCode: 'RP03',
               errorMessage: 'Callback URL is missing or does not use HTTPS',
@@ -122,7 +120,6 @@ describe('Swish Class...', () => {
             message: 'FF08'
           }), {
             name: 'SwishError',
-            status: false,
             errors: [{
               errorCode: 'FF08',
               errorMessage: 'Payment Reference is invalid',
@@ -140,7 +137,6 @@ describe('Swish Class...', () => {
             message: 'AM02'
           }), {
             name: 'SwishError',
-            status: false,
             errors: [{
               errorCode: 'AM02',
               errorMessage: 'Amount value is too large.',
@@ -158,7 +154,6 @@ describe('Swish Class...', () => {
             message: 'AM06'
           }), {
             name: 'SwishError',
-            status: false,
             errors: [{
               errorCode: 'AM06',
               errorMessage: 'Specified transaction amount is less than agreed minimum.',
@@ -176,7 +171,6 @@ describe('Swish Class...', () => {
             message: 'AM03'
           }), {
             name: 'SwishError',
-            status: false,
             errors: [{
               errorCode: 'AM03',
               errorMessage: 'Invalid or missing Currency.',
@@ -194,7 +188,6 @@ describe('Swish Class...', () => {
             message: 'RP02'
           }), {
             name: 'SwishError',
-            status: false,
             errors: [{
               errorCode: 'RP02',
               errorMessage: 'Wrong formatted message.',
@@ -212,7 +205,6 @@ describe('Swish Class...', () => {
             message: 'RP04'
           }), {
             name: 'SwishError',
-            status: false,
             errors: [{
               errorCode: 'RP04',
               errorMessage: 'No payment request found related to a token',
@@ -230,7 +222,6 @@ describe('Swish Class...', () => {
             message: 'RP06'
           }), {
             name: 'SwishError',
-            status: false,
             errors: [{
               errorCode: 'RP06',
               errorMessage: 'A payment request already exists for that payer.',
@@ -248,7 +239,6 @@ describe('Swish Class...', () => {
             message: 'ACMT01'
           }), {
             name: 'SwishError',
-            status: false,
             errors: [{
               errorCode: 'ACMT01',
               errorMessage: 'Counterpart is not activated.',
@@ -266,7 +256,6 @@ describe('Swish Class...', () => {
             message: 'ACMT03'
           }), {
             name: 'SwishError',
-            status: false,
             errors: [{
               errorCode: 'ACMT03',
               errorMessage: 'Payer not Enrolled.',
@@ -284,7 +273,6 @@ describe('Swish Class...', () => {
             message: 'ACMT07'
           }), {
             name: 'SwishError',
-            status: false,
             errors: [{
               errorCode: 'ACMT07',
               errorMessage: 'Payee not Enrolled.',
@@ -302,7 +290,6 @@ describe('Swish Class...', () => {
             message: 'VR01'
           }), {
             name: 'SwishError',
-            status: false,
             errors: [{
               errorCode: 'VR01',
               errorMessage: 'Payer does not meet age limit.',
@@ -320,7 +307,6 @@ describe('Swish Class...', () => {
             message: 'VR02'
           }), {
             name: 'SwishError',
-            status: false,
             errors: [{
               errorCode: 'VR02',
               errorMessage: 'The payer alias in the request is not enroled in swish with the supplied ssn',
@@ -340,7 +326,6 @@ describe('Swish Class...', () => {
           });
         }, {
           name: 'SwishError',
-          status: false,
           errors: [{
             errorCode: 'VL10',
             errorMessage: 'Invalid Phone Number. Must be a valid Swedish phone number between 8 and 15 numerals (including country code and no leading zeros.',
@@ -357,7 +342,6 @@ describe('Swish Class...', () => {
           });
         }, {
           name: 'SwishError',
-          status: false,
           errors: [{
             errorCode: 'PA02',
             errorMessage: 'Amount value is missing or not a valid number.',
@@ -374,7 +358,6 @@ describe('Swish Class...', () => {
           });
         }, {
           name: 'SwishError',
-          status: false,
           errors: [{
             errorCode: 'PA02',
             errorMessage: 'Amount value is missing or not a valid number.',
@@ -392,7 +375,6 @@ describe('Swish Class...', () => {
           });
         }, {
           name: 'SwishError',
-          status: false,
           errors: [{
             errorCode: 'VL11',
             errorMessage: 'Invalid Message. Must be less than 50 characters and only use a-ö, A-Ö, the numbers 0-9 and the special characters :;.,?!()”.',
@@ -410,7 +392,6 @@ describe('Swish Class...', () => {
           });
         }, {
           name: 'SwishError',
-          status: false,
           errors: [{
             errorCode: 'VL13',
             errorMessage: 'Invalid Payee Payment Reference. Must be between 1 and 36 characters and only use a-ö, A-Ö and the numbers 0-9.',
@@ -428,7 +409,6 @@ describe('Swish Class...', () => {
           });
         }, {
           name: 'SwishError',
-          status: false,
           errors: [{
             errorCode: 'VL14',
             errorMessage: 'Invalid Person Nummer. Must be 10 or 12 digits and a valid Swedish Personnummer or Sammordningsnummer.',
@@ -446,7 +426,6 @@ describe('Swish Class...', () => {
           });
         }, {
           name: 'SwishError',
-          status: false,
           errors: [{
             errorCode: 'VL12',
             errorMessage: 'Invalid Age Limit. Must be an integer between 1 and 99.',
@@ -510,7 +489,6 @@ describe('Swish Class...', () => {
           swish.retrievePaymentRequest();
         }, {
           name: 'SwishError',
-          status: false,
           errors: [{
             errorCode: 'VL15',
             errorMessage: 'ID must be supplied to receive payment request.',
@@ -525,7 +503,6 @@ describe('Swish Class...', () => {
             id: 'INVALIDID'
           }), {
             name: 'SwishError',
-            status: false,
             errors: [{
               errorCode: 'RP04',
               errorMessage: 'No payment request found related to a token',
@@ -538,7 +515,6 @@ describe('Swish Class...', () => {
   });
 
   describe('Integration Test', () => {
-    let swish;
     let requestPayload;
 
     before('initiates class', function () {

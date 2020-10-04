@@ -6,7 +6,6 @@ class SwishError extends Error {
     }
 
     this.name = 'SwishError';
-    this.status = false;
     this.errors = [];
     codes.forEach((code) => {
       this.errors.push({
