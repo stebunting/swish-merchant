@@ -82,19 +82,25 @@ class Swish {
     // Verify and assign amount
     const amount = verify(args.amount, 'amount');
     if (amount === false) {
-      throw new SwishError(['PA02']);
+      return new Promise((_resolve, reject) => (
+        reject(new SwishError(['PA02']))
+      ));
     }
 
     // Verify and assign payer alias
     const payerAlias = verify(args.phoneNumber, 'payerAlias');
     if (payerAlias === false) {
-      throw new SwishError(['VL10']);
+      return new Promise((_resolve, reject) => (
+        reject(new SwishError(['VL10']))
+      ));
     }
 
     // Verify and assign message (blank by default)
     const message = verify(args.message || '', 'message');
     if (message === false) {
-      throw new SwishError(['VL11']);
+      return new Promise((_resolve, reject) => (
+        reject(new SwishError(['VL11']))
+      ));
     }
 
     // Create API configuration
@@ -119,7 +125,9 @@ class Swish {
     if (args.payeePaymentReference) {
       config.data.payeePaymentReference = verify(args.payeePaymentReference, 'payeePaymentReference');
       if (config.data.payeePaymentReference === false) {
-        throw new SwishError(['VL13']);
+        return new Promise((_resolve, reject) => (
+          reject(new SwishError(['VL13']))
+        ));
       }
     }
 
@@ -127,7 +135,9 @@ class Swish {
     if (args.personNummer) {
       config.data.payerSSN = verify(args.personNummer, 'personNummer');
       if (config.data.payerSSN === false) {
-        throw new SwishError(['VL14']);
+        return new Promise((_resolve, reject) => (
+          reject(new SwishError(['VL14']))
+        ));
       }
     }
 
@@ -135,30 +145,35 @@ class Swish {
     if (args.ageLimit) {
       config.data.ageLimit = verify(args.ageLimit, 'ageLimit');
       if (config.data.ageLimit === false) {
-        throw new SwishError(['VL12']);
+        return new Promise((_resolve, reject) => (
+          reject(new SwishError(['VL12']))
+        ));
       }
     }
 
-    return new Promise((resolve, reject) => axios(config)
-      .then((response) => {
-        if (response.status !== 201) {
-          throw SwishError(['X1']);
-        }
-        return resolve({
-          success: true,
-          id
-        });
-      })
-      .catch((error) => {
-        reject(new SwishError(error.response.data.map((x) => x.errorCode)));
-      }));
+    return new Promise((resolve, reject) => (
+      axios(config)
+        .then((response) => {
+          if (response.status !== 201) {
+            throw SwishError(['X1']);
+          }
+          return resolve({
+            success: true,
+            id
+          });
+        })
+        .catch((error) => {
+          reject(new SwishError(error.response.data.map((x) => x.errorCode)));
+        })));
   }
 
   // Method to Retrieve a Payment Request
   retrievePaymentRequest(args = {}) {
     const endpoint = '/api/v1/paymentrequests/';
     if (!args.id) {
-      throw new SwishError(['VL15']);
+      return new Promise((_resolve, reject) => (
+        reject(new SwishError(['VL15']))
+      ));
     }
     const { id } = args;
 
@@ -169,19 +184,20 @@ class Swish {
       httpsAgent: this.httpsAgent
     };
 
-    return new Promise((resolve, reject) => axios(config)
-      .then((response) => {
-        if (response.status !== 200) {
-          throw SwishError(['X1']);
-        }
-        return resolve({
-          success: true,
-          data: response.data
-        });
-      })
-      .catch((error) => {
-        reject(new SwishError(error.response.data.map((x) => x.errorCode)));
-      }));
+    return new Promise((resolve, reject) => (
+      axios(config)
+        .then((response) => {
+          if (response.status !== 200) {
+            throw SwishError(['X1']);
+          }
+          return resolve({
+            success: true,
+            data: response.data
+          });
+        })
+        .catch((error) => {
+          reject(new SwishError(error.response.data.map((x) => x.errorCode)));
+        })));
   }
 
   // Method to create a refund request
@@ -193,19 +209,25 @@ class Swish {
     // Verify and assign amount
     const amount = verify(args.amount, 'amount');
     if (amount === false) {
-      throw new SwishError(['PA02']);
+      return new Promise((_resolve, reject) => (
+        reject(new SwishError(['PA02']))
+      ));
     }
 
     // Verify and assign original payment reference
     const originalPaymentReference = verify(args.originalPaymentReference, 'uuid');
     if (originalPaymentReference === false) {
-      throw new SwishError(['FF08']);
+      return new Promise((_resolve, reject) => (
+        reject(new SwishError(['FF08']))
+      ));
     }
 
     // Verify and assign message (blank by default)
     const message = verify(args.message || '', 'message');
     if (message === false) {
-      throw new SwishError(['VL11']);
+      return new Promise((_resolve, reject) => (
+        reject(new SwishError(['VL11']))
+      ));
     }
 
     // Create API configuration
@@ -230,30 +252,35 @@ class Swish {
     if (args.payerPaymentReference) {
       config.data.payerPaymentReference = verify(args.payerPaymentReference, 'payeePaymentReference');
       if (config.data.payerPaymentReference === false) {
-        throw new SwishError(['VL13']);
+        return new Promise((_resolve, reject) => (
+          reject(new SwishError(['VL13']))
+        ));
       }
     }
 
-    return new Promise((resolve, reject) => axios(config)
-      .then((response) => {
-        if (response.status !== 201) {
-          throw SwishError(['X1']);
-        }
-        return resolve({
-          success: true,
-          id
-        });
-      })
-      .catch((error) => {
-        reject(new SwishError(error.response.data.map((x) => x.errorCode)));
-      }));
+    return new Promise((resolve, reject) => (
+      axios(config)
+        .then((response) => {
+          if (response.status !== 201) {
+            throw SwishError(['X1']);
+          }
+          return resolve({
+            success: true,
+            id
+          });
+        })
+        .catch((error) => {
+          reject(new SwishError(error.response.data.map((x) => x.errorCode)));
+        })));
   }
 
   // Method to Retrieve a Refund Request
   retrieveRefundRequest(args = {}) {
     const endpoint = '/api/v1/refunds/';
     if (!args.id) {
-      throw new SwishError(['VL15']);
+      return new Promise((_resolve, reject) => (
+        reject(new SwishError(['VL15']))
+      ));
     }
     const { id } = args;
 
@@ -264,19 +291,20 @@ class Swish {
       httpsAgent: this.httpsAgent
     };
 
-    return new Promise((resolve, reject) => axios(config)
-      .then((response) => {
-        if (response.status !== 200) {
-          throw SwishError(['X1']);
-        }
-        return resolve({
-          success: true,
-          data: response.data
-        });
-      })
-      .catch((error) => {
-        reject(new SwishError(error.response.data.map((x) => x.errorCode)));
-      }));
+    return new Promise((resolve, reject) => (
+      axios(config)
+        .then((response) => {
+          if (response.status !== 200) {
+            return reject(new SwishError(['X1']));
+          }
+          return resolve({
+            success: true,
+            data: response.data
+          });
+        })
+        .catch((error) => (
+          reject(new SwishError(error.response.data.map((x) => x.errorCode)))
+        ))));
   }
 }
 

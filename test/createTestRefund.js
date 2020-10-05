@@ -226,101 +226,101 @@ describe('Swish Class...', () => {
       });
 
       it('with invalid original payment reference', async function () {
-        assert.throws(() => {
+        assert.rejects(
           swish.createRefundRequest({
             originalPaymentReference: 'INVALID',
             amount: '200'
-          });
-        }, {
-          name: 'SwishError',
-          errors: [{
-            errorCode: 'FF08',
-            errorMessage: 'Payment Reference is invalid',
-            additionalInformation: null
-          }]
-        });
+          }), {
+            name: 'SwishError',
+            errors: [{
+              errorCode: 'FF08',
+              errorMessage: 'Payment Reference is invalid',
+              additionalInformation: null
+            }]
+          }
+        );
       });
 
       it('with invalid original payment reference', async function () {
-        assert.throws(() => {
+        assert.rejects(
           swish.createRefundRequest({
             originalPaymentReference: 'INVALID',
             amount: '200'
-          });
-        }, {
-          name: 'SwishError',
-          errors: [{
-            errorCode: 'FF08',
-            errorMessage: 'Payment Reference is invalid',
-            additionalInformation: null
-          }]
-        });
+          }), {
+            name: 'SwishError',
+            errors: [{
+              errorCode: 'FF08',
+              errorMessage: 'Payment Reference is invalid',
+              additionalInformation: null
+            }]
+          }
+        );
       });
 
       it('with too high amount', async function () {
-        assert.throws(() => {
+        assert.rejects(
           swish.createRefundRequest({
             originalPaymentReference: '1234567890ABCDEF1234567890ABCDEF',
             amount: '1000000000000'
-          });
-        }, {
-          name: 'SwishError',
-          errors: [{
-            errorCode: 'PA02',
-            errorMessage: 'Amount value is missing or not a valid number.',
-            additionalInformation: null
-          }]
-        });
+          }), {
+            name: 'SwishError',
+            errors: [{
+              errorCode: 'PA02',
+              errorMessage: 'Amount value is missing or not a valid number.',
+              additionalInformation: null
+            }]
+          }
+        );
       });
 
       it('with invalid amount', async function () {
-        assert.throws(() => {
+        assert.rejects(
           swish.createRefundRequest({
             originalPaymentReference: '1234567890ABCDEF1234567890ABCDEF',
             amount: '0.001'
-          });
-        }, {
-          name: 'SwishError',
-          errors: [{
-            errorCode: 'PA02',
-            errorMessage: 'Amount value is missing or not a valid number.',
-            additionalInformation: null
-          }]
-        });
+          }), {
+            name: 'SwishError',
+            errors: [{
+              errorCode: 'PA02',
+              errorMessage: 'Amount value is missing or not a valid number.',
+              additionalInformation: null
+            }]
+          }
+        );
       });
 
       it('with invalid message', async function () {
-        assert.throws(() => {
+        assert.rejects(
           swish.createRefundRequest({
             originalPaymentReference: '1234567890ABCDEF1234567890ABCDEF',
             amount: '100',
             message: '[INVALIDMESSAGE]'
-          });
-        }, {
-          name: 'SwishError',
-          errors: [{
-            errorCode: 'VL11',
-            errorMessage: 'Invalid Message. Must be less than 50 characters and only use a-ö, A-Ö, the numbers 0-9 and the special characters :;.,?!()”.',
-            additionalInformation: null
-          }]
-        });
+          }), {
+            name: 'SwishError',
+            errors: [{
+              errorCode: 'VL11',
+              errorMessage: 'Invalid Message. Must be less than 50 characters and only use a-ö, A-Ö, the numbers 0-9 and the special characters :;.,?!()”.',
+              additionalInformation: null
+            }]
+          }
+        );
       });
 
       it('with invalid payerPaymentReference', async function () {
-        assert.throws(() => {
+        assert.rejects(
           swish.createRefundRequest({
             originalPaymentReference: '1234567890ABCDEF1234567890ABCDEF',
             amount: '100',
             payerPaymentReference: '[INVALIDMESSAGE]'
-          });
-        }, {
-          name: 'SwishError',
-          errors: [{
-            errorCode: 'VL13',
-            errorMessage: 'Invalid Payee/Payer Payment Reference. Must be between 1 and 36 characters and only use a-ö, A-Ö and the numbers 0-9.',
-            additionalInformation: null
-          }]
-        });
+          }), {
+            name: 'SwishError',
+            errors: [{
+              errorCode: 'VL13',
+              errorMessage: 'Invalid Payee/Payer Payment Reference. Must be between 1 and 36 characters and only use a-ö, A-Ö and the numbers 0-9.',
+              additionalInformation: null
+            }]
+          }
+        );
       });
     });
   });
@@ -372,9 +372,7 @@ describe('Swish Class...', () => {
 
     describe('fails...', function () {
       it('with missing id', function () {
-        assert.throws(() => {
-          swish.retrieveRefundRequest();
-        }, {
+        assert.rejects(swish.retrieveRefundRequest(), {
           name: 'SwishError',
           errors: [{
             errorCode: 'VL15',
@@ -384,7 +382,7 @@ describe('Swish Class...', () => {
         });
       });
 
-      it('with invalid id', async function () {
+      it('with invalid id', function () {
         assert.rejects(
           swish.retrieveRefundRequest({
             id: 'INVALIDID'

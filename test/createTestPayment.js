@@ -319,119 +319,119 @@ describe('Swish Class...', () => {
 
     describe('fails...', function () {
       it('with invalid payer alias', async function () {
-        assert.throws(() => {
+        assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0787',
             amount: '200'
-          });
-        }, {
-          name: 'SwishError',
-          errors: [{
-            errorCode: 'VL10',
-            errorMessage: 'Invalid Phone Number. Must be a valid Swedish phone number between 8 and 15 numerals (including country code and no leading zeros.',
-            additionalInformation: null
-          }]
-        });
+          }), {
+            name: 'SwishError',
+            errors: [{
+              errorCode: 'VL10',
+              errorMessage: 'Invalid Phone Number. Must be a valid Swedish phone number between 8 and 15 numerals (including country code and no leading zeros.',
+              additionalInformation: null
+            }]
+          }
+        );
       });
 
       it('with too high amount', async function () {
-        assert.throws(() => {
+        assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0722247583',
             amount: '1000000000000'
-          });
-        }, {
-          name: 'SwishError',
-          errors: [{
-            errorCode: 'PA02',
-            errorMessage: 'Amount value is missing or not a valid number.',
-            additionalInformation: null
-          }]
-        });
+          }), {
+            name: 'SwishError',
+            errors: [{
+              errorCode: 'PA02',
+              errorMessage: 'Amount value is missing or not a valid number.',
+              additionalInformation: null
+            }]
+          }
+        );
       });
 
       it('with invalid amount', async function () {
-        assert.throws(() => {
+        assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0722247583',
             amount: '0.001'
-          });
-        }, {
-          name: 'SwishError',
-          errors: [{
-            errorCode: 'PA02',
-            errorMessage: 'Amount value is missing or not a valid number.',
-            additionalInformation: null
-          }]
-        });
+          }), {
+            name: 'SwishError',
+            errors: [{
+              errorCode: 'PA02',
+              errorMessage: 'Amount value is missing or not a valid number.',
+              additionalInformation: null
+            }]
+          }
+        );
       });
 
       it('with invalid message', async function () {
-        assert.throws(() => {
+        assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0722247583',
             amount: '100',
             message: '[INVALIDMESSAGE]'
-          });
-        }, {
-          name: 'SwishError',
-          errors: [{
-            errorCode: 'VL11',
-            errorMessage: 'Invalid Message. Must be less than 50 characters and only use a-ö, A-Ö, the numbers 0-9 and the special characters :;.,?!()”.',
-            additionalInformation: null
-          }]
-        });
+          }), {
+            name: 'SwishError',
+            errors: [{
+              errorCode: 'VL11',
+              errorMessage: 'Invalid Message. Must be less than 50 characters and only use a-ö, A-Ö, the numbers 0-9 and the special characters :;.,?!()”.',
+              additionalInformation: null
+            }]
+          }
+        );
       });
 
       it('with invalid payee payment reference', async function () {
-        assert.throws(() => {
+        assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0722247583',
             amount: '100',
             payeePaymentReference: '[INVALIDMESSAGE]'
-          });
-        }, {
-          name: 'SwishError',
-          errors: [{
-            errorCode: 'VL13',
-            errorMessage: 'Invalid Payee/Payer Payment Reference. Must be between 1 and 36 characters and only use a-ö, A-Ö and the numbers 0-9.',
-            additionalInformation: null
-          }]
-        });
+          }), {
+            name: 'SwishError',
+            errors: [{
+              errorCode: 'VL13',
+              errorMessage: 'Invalid Payee/Payer Payment Reference. Must be between 1 and 36 characters and only use a-ö, A-Ö and the numbers 0-9.',
+              additionalInformation: null
+            }]
+          }
+        );
       });
 
       it('with invalid person nummer', async function () {
-        assert.throws(() => {
+        assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0722247583',
             amount: '100',
             personNummer: '[INVALIDPERSONNUMMER]'
-          });
-        }, {
-          name: 'SwishError',
-          errors: [{
-            errorCode: 'VL14',
-            errorMessage: 'Invalid Person Nummer. Must be 10 or 12 digits and a valid Swedish Personnummer or Sammordningsnummer.',
-            additionalInformation: null
-          }]
-        });
+          }), {
+            name: 'SwishError',
+            errors: [{
+              errorCode: 'VL14',
+              errorMessage: 'Invalid Person Nummer. Must be 10 or 12 digits and a valid Swedish Personnummer or Sammordningsnummer.',
+              additionalInformation: null
+            }]
+          }
+        );
       });
 
       it('with invalid age limit', async function () {
-        assert.throws(() => {
+        assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0722247583',
             amount: '100',
             ageLimit: 105
-          });
-        }, {
-          name: 'SwishError',
-          errors: [{
-            errorCode: 'VL12',
-            errorMessage: 'Invalid Age Limit. Must be an integer between 1 and 99.',
-            additionalInformation: null
-          }]
-        });
+          }), {
+            name: 'SwishError',
+            errors: [{
+              errorCode: 'VL12',
+              errorMessage: 'Invalid Age Limit. Must be an integer between 1 and 99.',
+              additionalInformation: null
+            }]
+          }
+        );
       });
     });
   });
@@ -485,9 +485,7 @@ describe('Swish Class...', () => {
 
     describe('fails...', function () {
       it('with missing id', function () {
-        assert.throws(() => {
-          swish.retrievePaymentRequest();
-        }, {
+        assert.rejects(swish.retrievePaymentRequest(), {
           name: 'SwishError',
           errors: [{
             errorCode: 'VL15',

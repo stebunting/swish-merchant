@@ -21,8 +21,7 @@ npm i swish-merchant
 
 ## API Documentation
 
-### Require The Library
-
+Require The Library
 ```javascript
 const Swish = require('swish-merchant');
 ```
