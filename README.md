@@ -4,9 +4,8 @@
 
 Promise-based Node.js library for integrating Swish for Merchants quickly and simply.
 
- - Currently supports creating payments, getting payment details and creating refunds.
- - Add your certificate files as files or strings (auto-checks).
-In Progress!
+ - Supports creating payments, getting payment details, creating refunds and retrieving refunds.
+ - Add your certificate files as files or strings (auto-checking).
 
 ## API
 ```javascript
