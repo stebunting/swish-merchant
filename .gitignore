@@ -1,5 +1,5 @@
 node_modules
 test/private
-test/create-and-check-request.js
+test/liveServerTest.js
 *.lcov
 .nyc_output
