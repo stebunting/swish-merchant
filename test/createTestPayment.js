@@ -491,7 +491,7 @@ describe('Swish Class...', () => {
           name: 'SwishError',
           errors: [{
             errorCode: 'VL15',
-            errorMessage: 'ID must be supplied to receive payment request.',
+            errorMessage: 'ID must be supplied to receive payment/refund request.',
             additionalInformation: null
           }]
         });

@@ -184,6 +184,7 @@ class Swish {
       }));
   }
 
+  // Method to create a refund request
   createRefundRequest(args = {}) {
     const endpoint = '/api/v2/refunds/';
     const id = getSwishID();
@@ -241,6 +242,36 @@ class Swish {
         return resolve({
           success: true,
           id
+        });
+      })
+      .catch((error) => {
+        reject(new SwishError(error.response.data.map((x) => x.errorCode)));
+      }));
+  }
+
+  // Method to Retrieve a Refund Request
+  retrieveRefundRequest(args = {}) {
+    const endpoint = '/api/v1/refunds/';
+    if (!args.id) {
+      throw new SwishError(['VL15']);
+    }
+    const { id } = args;
+
+    // Create API configuration
+    const config = {
+      method: 'get',
+      url: `${this.url}${endpoint}${id}`,
+      httpsAgent: this.httpsAgent
+    };
+
+    return new Promise((resolve, reject) => axios(config)
+      .then((response) => {
+        if (response.status !== 200) {
+          throw SwishError(['X1']);
+        }
+        return resolve({
+          success: true,
+          data: response.data
         });
       })
       .catch((error) => {

@@ -47,4 +47,10 @@ swish.createRefundRequest({
   payerPaymentReference: 'CUSTOM_REFERENCE'         // Optional
 }).then((data) => {})
   .catch((error) => {});
+
+// Retrieve Refund Request
+swish.retrieveRefundRequest({
+  id: 'REFUND_REQUEST_ID',                          // Required
+}).then((data) => {})
+  .catch((error) => {});
 ```

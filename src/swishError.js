@@ -123,7 +123,7 @@ class SwishError extends Error {
         return 'Invalid Person Nummer. Must be 10 or 12 digits and a valid Swedish Personnummer or Sammordningsnummer.';
 
       case 'VL15':
-        return 'ID must be supplied to receive payment request.';
+        return 'ID must be supplied to receive payment/refund request.';
 
       case 'X1':
       default:

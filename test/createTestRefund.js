@@ -56,7 +56,8 @@ describe('Swish Class...', () => {
         requestPayload = {
           amount: 200,
           originalPaymentReference: '1234567890ABCDEF1234567890ABCDEF',
-          message: 'This is a refund'
+          message: 'This is a refund',
+          payerPaymentReference: 'payerRef'
         };
       });
 
@@ -320,6 +321,82 @@ describe('Swish Class...', () => {
             additionalInformation: null
           }]
         });
+      });
+    });
+  });
+
+  describe('retrieves Refund Request and...', function () {
+    let requestPayload;
+    const transactionId = 'ED6F08DDF4C1439AB071CB8B465EB024';
+
+    before('initiates class', function () {
+      swish = new Swish(classPayload);
+      assert(true);
+
+      // Set URL to Simulator Testing URL
+      swish.url = 'https://mss.cpc.getswish.net/swish-cpcapi';
+    });
+
+    beforeEach('initialise payload', function () {
+      requestPayload = {
+        amount: 200,
+        originalPaymentReference: '1234567890ABCDEF1234567890ABCDEF',
+        message: 'This is a refund',
+        payerPaymentReference: 'payerRef'
+      };
+    });
+
+    describe('succeeds...', function () {
+      it('with valid payload', async function () {
+        const response = await swish.retrieveRefundRequest({
+          id: transactionId
+        });
+        assert(response.success);
+        assert.strictEqual(response.data.id, transactionId);
+        assert.strictEqual(response.data.payerAlias, classPayload.alias);
+        assert.strictEqual(response.data.amount, requestPayload.amount);
+        assert.strictEqual(response.data.message, requestPayload.message);
+        assert.strictEqual(
+          response.data.payeePaymentReference,
+          requestPayload.payeePaymentReference
+        );
+        assert.strictEqual(response.data.currency, 'SEK');
+        assert.strictEqual(response.data.status, 'PAID');
+        assert.strictEqual(response.data.callbackUrl, swish.paymentRequestCallback);
+        assert.strictEqual(response.data.datePaid, '2020-10-05T11:06:32.392Z');
+        assert.strictEqual(response.data.errorCode, null);
+        assert.strictEqual(response.data.errorMessage, null);
+        requestPayload.paymentReference = response.data.paymentReference;
+      });
+    });
+
+    describe('fails...', function () {
+      it('with missing id', function () {
+        assert.throws(() => {
+          swish.retrieveRefundRequest();
+        }, {
+          name: 'SwishError',
+          errors: [{
+            errorCode: 'VL15',
+            errorMessage: 'ID must be supplied to receive payment/refund request.',
+            additionalInformation: null
+          }]
+        });
+      });
+
+      it('with invalid id', async function () {
+        assert.rejects(
+          swish.retrieveRefundRequest({
+            id: 'INVALIDID'
+          }), {
+            name: 'SwishError',
+            errors: [{
+              errorCode: 'RP04',
+              errorMessage: 'No payment request found related to a token',
+              additionalInformation: null
+            }]
+          }
+        );
       });
     });
   });
