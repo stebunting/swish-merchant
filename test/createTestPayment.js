@@ -394,7 +394,7 @@ describe('Swish Class...', () => {
           name: 'SwishError',
           errors: [{
             errorCode: 'VL13',
-            errorMessage: 'Invalid Payee Payment Reference. Must be between 1 and 36 characters and only use a-ö, A-Ö and the numbers 0-9.',
+            errorMessage: 'Invalid Payee/Payer Payment Reference. Must be between 1 and 36 characters and only use a-ö, A-Ö and the numbers 0-9.',
             additionalInformation: null
           }]
         });
@@ -491,7 +491,7 @@ describe('Swish Class...', () => {
           name: 'SwishError',
           errors: [{
             errorCode: 'VL15',
-            errorMessage: 'ID must be supplied to receive payment request.',
+            errorMessage: 'ID must be supplied to receive payment/refund request.',
             additionalInformation: null
           }]
         });

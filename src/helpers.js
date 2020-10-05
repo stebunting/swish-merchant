@@ -99,6 +99,14 @@ function helpers() {
         return re.test(thing) ? thing : false;
       }
 
+      case 'uuid': {
+        if (typeof thing !== 'string') {
+          return false;
+        }
+        const re = /^[0-9A-Fa-f]{32}$/;
+        return re.test(thing) ? thing : false;
+      }
+
       // Must be 12-digit
       case 'personNummer': {
         if (typeof thing !== 'string' || !/^[0-9-]*$/.test(thing)) {
