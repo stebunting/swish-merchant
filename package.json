@@ -1,6 +1,6 @@
 {
   "name": "swish-merchant",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Swish for Merchants Node.js Integration Library",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,7 @@
   "author": "Steve Bunting <stebunting@gmail.com> (https://github.com/stebunting)",
   "license": "MIT",
   "devDependencies": {
-    "codecov": "^3.7.2",
+    "codecov": "^3.8.0",
     "eslint": "^7.10.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.1",

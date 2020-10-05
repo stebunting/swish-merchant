@@ -1,3 +1,1 @@
-const Swish = require('./src/swish');
-
-module.exports = Swish;
+module.exports = require('./src/swish');
