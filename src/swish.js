@@ -221,9 +221,17 @@ class Swish {
         currency: 'SEK',
         amount,
         message,
-        originalPaymentReference: args.originalPaymentReference
+        originalPaymentReference
       }
     };
+
+    // Verify and assign optional payer payment reference if applicable
+    if (args.payerPaymentReference) {
+      config.data.payerPaymentReference = verify(args.payerPaymentReference, 'payeePaymentReference');
+      if (config.data.payerPaymentReference === false) {
+        throw new SwishError(['VL13']);
+      }
+    }
 
     return new Promise((resolve, reject) => axios(config)
       .then((response) => {

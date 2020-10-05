@@ -31,17 +31,41 @@ class SwishError extends Error {
       case 'BE18':
         return 'Payer alias is invalid';
 
-      case 'RP01':
-        return 'Missing Merchant Swish Number.';
-
       case 'AM02':
         return 'Amount value is too large.';
 
       case 'AM03':
         return 'Invalid or missing Currency.';
 
+      case 'AM04':
+        return 'Insufficient funds in account.';
+
       case 'AM06':
         return 'Specified transaction amount is less than agreed minimum.';
+
+      case 'RF02':
+        return 'Unexpected Error';
+
+      case 'RF03':
+        return 'Payer alias in the refund does not match the payee alias in the original payment.';
+
+      case 'RF04':
+        return 'Payer organization number do not match original payment payee organization number.';
+
+      case 'RF06':
+        return 'The Payer SSN in the original payment is not the same as the SSN for the current Payee.';
+
+      case 'RF07':
+        return 'Transaction declined.';
+
+      case 'RF08':
+        return 'Amount value is too large, or amount exceeds the amount of the original payment minus any previous refunds.';
+
+      case 'RF09':
+        return 'Refund already in progress.';
+
+      case 'RP01':
+        return 'Missing Merchant Swish Number.';
 
       case 'RP02':
         return 'Wrong formatted message.';
@@ -52,11 +76,14 @@ class SwishError extends Error {
       case 'RP06':
         return 'A payment request already exists for that payer.';
 
-      case 'ACMT03':
-        return 'Payer not Enrolled.';
+      case 'RP09':
+        return 'InstructionUUID not available.';
 
       case 'ACMT01':
         return 'Counterpart is not activated.';
+
+      case 'ACMT03':
+        return 'Payer not Enrolled.';
 
       case 'ACMT07':
         return 'Payee not Enrolled.';
@@ -90,7 +117,7 @@ class SwishError extends Error {
         return 'Invalid Age Limit. Must be an integer between 1 and 99.';
 
       case 'VL13':
-        return 'Invalid Payee Payment Reference. Must be between 1 and 36 characters and only use a-ö, A-Ö and the numbers 0-9.';
+        return 'Invalid Payee/Payer Payment Reference. Must be between 1 and 36 characters and only use a-ö, A-Ö and the numbers 0-9.';
 
       case 'VL14':
         return 'Invalid Person Nummer. Must be 10 or 12 digits and a valid Swedish Personnummer or Sammordningsnummer.';

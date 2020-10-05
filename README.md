@@ -3,6 +3,9 @@
 [![codecov](https://codecov.io/gh/stebunting/swish-merchant/branch/master/graph/badge.svg)](https://codecov.io/gh/stebunting/swish-merchant)
 
 Promise-based Node.js library for integrating Swish for Merchants quickly and simply.
+
+ - Currently supports creating payments, getting payment details and creating refunds.
+ - Add your certificate files as files or strings (auto-checks).
 In Progress!
 
 ## API
@@ -33,6 +36,15 @@ swish.createPaymentRequest({
 // Retrieve Payment Request
 swish.retrievePaymentRequest({
   id: 'PAYMENT_REQUEST_ID',                         // Required
-  }).then((data) => {})
+}).then((data) => {})
+  .catch((error) => {});
+
+// Create Refund Request
+swish.createRefundRequest({
+  originalPaymentReference: 'PAYMENT_TO_REFUND'     // Required
+  amount: 'AMOUNT_TO_REFUND',                       // Required
+  message: 'MESSAGE_TO_USER'                        // Optional
+  payerPaymentReference: 'CUSTOM_REFERENCE'         // Optional
+}).then((data) => {})
   .catch((error) => {});
 ```
