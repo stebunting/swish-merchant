@@ -5,15 +5,30 @@
 Promise-based Node.js library for integrating Swish for Merchants quickly and simply.
 
  - Supports creating payments, getting payment details, creating refunds and retrieving refunds.
- - Add your certificate files as files or strings (auto-checking).git 
+ - Add your certificate files as files or strings (auto-checking).
+
+## Before you begin
+
+ - Sign up for a 'Swish for Merchants' account with your bank
+ - Get your certificates from the [Swish Portal](https://portal.swish.nu/).
+
+## Installation
+
+ - Install with npm
+```
+npm i swish-merchant
+```
 
 ## API Documentation
+
 ### Require The Library
+
 ```javascript
 const Swish = require('swish-merchant');
 ```
 
 ### Instantiate the class with your details
+
 ```javascript
 const swish = new Swish({
   alias: 'YOUR_SWISH_FOR_MERCHANTS_ALIAS',
@@ -25,6 +40,7 @@ const swish = new Swish({
 ```
 
 ### Create New Payment Request
+
 ```javascript
 swish.createPaymentRequest({
   phoneNumber: 'USERS_PHONE_NUMER',                 // Required
@@ -46,6 +62,7 @@ Response contains success flag and payment ID.
 ```
 
 ### Retrieve Created Payment Request
+
 ```javascript
 swish.retrievePaymentRequest({
   id: 'PAYMENT_REQUEST_ID',                         // Required
@@ -77,6 +94,7 @@ Response contains success flag and payment details.
 ```
 
 ### Create New Refund Request
+
 ```javascript
 swish.createRefundRequest({
   originalPaymentReference: 'PAYMENT_TO_REFUND'     // Required
@@ -96,6 +114,7 @@ Response contains success flag and refund ID.
 ```
 
 ### Retrieve Created Refund Request
+
 ```javascript
 swish.retrieveRefundRequest({
   id: 'REFUND_REQUEST_ID',                          // Required
