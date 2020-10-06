@@ -163,7 +163,10 @@ class Swish {
           });
         })
         .catch((error) => {
-          reject(new SwishError(error.response.data.map((x) => x.errorCode)));
+          if (error.response != null) {
+            return reject(new SwishError(error.response.data.map((x) => x.errorCode)));
+          }
+          return reject(new SwishError(['X2']));
         })));
   }
 

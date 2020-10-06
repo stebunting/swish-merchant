@@ -125,6 +125,9 @@ class SwishError extends Error {
       case 'VL15':
         return 'ID must be supplied to receive payment/refund request.';
 
+      case 'X2':
+        return 'Could not connect to Swish Server, check certificates.';
+
       case 'X1':
       default:
         return 'Unexpected Error';

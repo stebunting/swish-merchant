@@ -52,6 +52,25 @@ describe('Swish Class Constructor...', () => {
     });
 
     describe('throws SwishError on...', function () {
+      it('invalid certificate', function () {
+        swish = new Swish({
+          alias: '1234567890'
+        });
+        assert.rejects(
+          swish.createPaymentRequest({
+            phoneNumber: '0737768698',
+            amount: 250
+          }), {
+            name: 'SwishError',
+            errors: [{
+              errorCode: 'X2',
+              errorMessage: 'Could not connect to Swish Server, check certificates.',
+              additionalInformation: null
+            }]
+          }
+        );
+      });
+
       it('missing alias', function () {
         assert.throws(() => {
           swish = new Swish();
