@@ -13,6 +13,7 @@ describe('Swish Class...', () => {
     ca: 'test/private/test-ca.pem',
     password: 'swish'
   };
+  let validTransactionId;
 
   describe('creates Payment Request and...', function () {
     before('initiate class', function () {
@@ -47,6 +48,7 @@ describe('Swish Class...', () => {
       it('with valid information', async function () {
         const response = await swish.createPaymentRequest(requestPayload);
         assert(response.success);
+        validTransactionId = response.id;
       });
 
       it('with valid message', async function () {
@@ -438,7 +440,6 @@ describe('Swish Class...', () => {
 
   describe('retrieves Payment Request and...', function () {
     let requestPayload;
-    const transactionId = '41BA2B7B71A1456EA7A9676F0C18F39B';
 
     before('initiates class', function () {
       swish = new Swish(classPayload);
@@ -461,10 +462,10 @@ describe('Swish Class...', () => {
     describe('succeeds...', function () {
       it('with valid payload', async function () {
         const response = await swish.retrievePaymentRequest({
-          id: transactionId
+          id: validTransactionId
         });
         assert(response.success);
-        assert.strictEqual(response.data.id, transactionId);
+        assert.strictEqual(response.data.id, validTransactionId);
         assert.strictEqual(response.data.payerAlias, requestPayload.phoneNumber);
         assert.strictEqual(response.data.payeeAlias, classPayload.alias);
         assert.strictEqual(response.data.amount, requestPayload.amount);
@@ -474,9 +475,7 @@ describe('Swish Class...', () => {
           requestPayload.payeePaymentReference
         );
         assert.strictEqual(response.data.currency, 'SEK');
-        assert.strictEqual(response.data.status, 'PAID');
         assert.strictEqual(response.data.callbackUrl, swish.paymentRequestCallback);
-        assert.strictEqual(response.data.datePaid, '2020-10-03T07:10:54.372Z');
         assert.strictEqual(response.data.errorCode, null);
         assert.strictEqual(response.data.errorMessage, null);
         requestPayload.paymentReference = response.data.paymentReference;
