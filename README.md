@@ -1,6 +1,7 @@
 # Swish For Merchants
 [![Build Status](https://travis-ci.com/stebunting/swish-merchant.svg?branch=master)](https://travis-ci.com/stebunting/swish-merchant)
 [![codecov](https://codecov.io/gh/stebunting/swish-merchant/branch/master/graph/badge.svg)](https://codecov.io/gh/stebunting/swish-merchant)
+[![npm](https://img.shields.io/npm/v/swish-merchant)](https://www.npmjs.com/package/swish-merchant)
 
 Promise-based Node.js library for integrating Swish for Merchants quickly and simply.
 
