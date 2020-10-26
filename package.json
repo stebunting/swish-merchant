@@ -1,12 +1,17 @@
 {
   "name": "swish-merchant",
-  "version": "0.0.7",
+  "version": "0.0.6",
   "description": "Swish for Merchants Node.js Integration Library",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "start": "node index",
     "test": "nyc node_modules/mocha/bin/mocha --timeout 5000",
     "coverage": "nyc report -r=text-lcov > coverage.lcov && codecov -t 22b5dc14-dd1d-4a1e-8d5e-984cd15fd49f"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stebunting/swish-merchant"
   },
   "keywords": [
     "swish",
