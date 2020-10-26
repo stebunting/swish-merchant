@@ -1,12 +1,10 @@
-/* eslint-disable prefer-arrow-callback */
-/* eslint-disable func-names */
-// Requirementss
+// Requirements
 const assert = require('assert').strict;
 const { getSwishID, verify } = require('../src/helpers');
 
-describe('Helpers comprise...', function () {
-  describe('a Swish ID generator that...', function () {
-    it('generates IDs with 32 hexadecimal numerals', function () {
+describe('Helpers comprise...', () => {
+  describe('a Swish ID generator that...', () => {
+    it('generates IDs with 32 hexadecimal numerals', () => {
       const re = /^[0-9A-F]{32}$/;
       for (let i = 0; i < 1000; i += 1) {
         const id = getSwishID();
@@ -16,9 +14,9 @@ describe('Helpers comprise...', function () {
     });
   });
 
-  describe('functions that verify...', function () {
-    describe('Merchant Aliases by...', function () {
-      it('approving aliases with 10 numeric digits and spaces', function () {
+  describe('functions that verify...', () => {
+    describe('Merchant Aliases by...', () => {
+      it('approving aliases with 10 numeric digits and spaces', () => {
         assert.strictEqual(verify('123 646 7983', 'merchantAlias'), '1236467983');
         assert.strictEqual(verify('123 976 2836', 'merchantAlias'), '1239762836');
         assert.strictEqual(verify('1236782918', 'merchantAlias'), '1236782918');
@@ -27,7 +25,7 @@ describe('Helpers comprise...', function () {
         assert.strictEqual(verify('1 2 39762833', 'merchantAlias'), '1239762833');
       });
 
-      it('failing aliases which do not start with 123', function () {
+      it('failing aliases which do not start with 123', () => {
         assert.strictEqual(verify('1246489253', 'merchantAlias'), false);
         assert.strictEqual(verify('9874892539', 'merchantAlias'), false);
         assert.strictEqual(verify('1297483657', 'merchantAlias'), false);
@@ -35,21 +33,21 @@ describe('Helpers comprise...', function () {
         assert.strictEqual(verify('7846183648', 'merchantAlias'), false);
       });
 
-      it('failing aliases that are not 10 digits long', function () {
+      it('failing aliases that are not 10 digits long', () => {
         assert.strictEqual(verify('123', 'merchantAlias'), false);
         assert.strictEqual(verify('', 'merchantAlias'), false);
         assert.strictEqual(verify('12375892830', 'merchantAlias'), false);
         assert.strictEqual(verify('123756987', 'merchantAlias'), false);
       });
 
-      it('failing aliases that contain non-numeric numerals', function () {
+      it('failing aliases that contain non-numeric numerals', () => {
         assert.strictEqual(verify('123A798473', 'merchantAlias'), false);
         assert.strictEqual(verify('123!(*5739', 'merchantAlias'), false);
         assert.strictEqual(verify('123 HAT 5739', 'merchantAlias'), false);
         assert.strictEqual(verify('123.768283', 'merchantAlias'), false);
       });
 
-      it('failing aliases that are not strings', function () {
+      it('failing aliases that are not strings', () => {
         assert.strictEqual(verify(1237485938, 'merchantAlias'), false);
         assert.strictEqual(verify({ alias: '1236782918' }, 'merchantAlias'), false);
         assert.strictEqual(verify(['1236782918'], 'merchantAlias'), false);
@@ -59,8 +57,8 @@ describe('Helpers comprise...', function () {
       });
     });
 
-    describe('Payer Alias by...', function () {
-      it('approving aliases with between 8 and 15 digits (inc. code)', function () {
+    describe('Payer Alias by...', () => {
+      it('approving aliases with between 8 and 15 digits (inc. code)', () => {
         assert.strictEqual(verify('07968726312', 'payerAlias'), '467968726312');
         assert.strictEqual(verify('+468976283647', 'payerAlias'), '468976283647');
         assert.strictEqual(verify('+0142543', 'payerAlias'), '46142543');
@@ -70,7 +68,7 @@ describe('Helpers comprise...', function () {
         assert.strictEqual(verify('0000000046000000078913875', 'payerAlias'), '4678913875');
       });
 
-      it('failing aliases with less than 8 or more than 15 digits (inc. code)', function () {
+      it('failing aliases with less than 8 or more than 15 digits (inc. code)', () => {
         assert.strictEqual(verify('123', 'payerAlias'), false);
         assert.strictEqual(verify('4672986', 'payerAlias'), false);
         assert.strictEqual(verify('071984769284562', 'payerAlias'), false);
@@ -79,7 +77,7 @@ describe('Helpers comprise...', function () {
         assert.strictEqual(verify('0000072374', 'payerAlias'), false);
       });
 
-      it('failing aliases that are not strings', function () {
+      it('failing aliases that are not strings', () => {
         assert.strictEqual(verify(1237485938, 'payerAlias'), false);
         assert.strictEqual(verify({ phoneNumber: '1236782918' }, 'payerAlias'), false);
         assert.strictEqual(verify(['1236782918'], 'payerAlias'), false);
@@ -89,23 +87,23 @@ describe('Helpers comprise...', function () {
       });
     });
 
-    describe('Callback URL by...', function () {
-      it('approving urls with https protocol', function () {
+    describe('Callback URL by...', () => {
+      it('approving urls with https protocol', () => {
         assert.strictEqual(verify('https://www.google.com/', 'callbackUrl'), 'https://www.google.com/');
         assert.strictEqual(verify('https://abacus', 'callbackUrl'), 'https://abacus/');
         assert.strictEqual(verify('https://swish-callback.com/', 'callbackUrl'), 'https://swish-callback.com/');
       });
 
-      it('failing urls without protocol', function () {
+      it('failing urls without protocol', () => {
         assert.strictEqual(verify('www.google.com', 'callbackUrl'), false);
         assert.strictEqual(verify('google.com', 'callbackUrl'), false);
       });
 
-      it('failing urls without https protocol', function () {
+      it('failing urls without https protocol', () => {
         assert.strictEqual(verify('http://www.google.com/', 'callbackUrl'), false);
       });
 
-      it('failing urls that are not strings', function () {
+      it('failing urls that are not strings', () => {
         assert.strictEqual(verify(76897238497389, 'callbackUrl'), false);
         assert.strictEqual(verify({ callbackUrl: 'https://www.google.com/' }, 'callbackUrl'), false);
         assert.strictEqual(verify(['https://www.google.com/'], 'callbackUrl'), false);
@@ -115,8 +113,8 @@ describe('Helpers comprise...', function () {
       });
     });
 
-    describe('Amount by...', function () {
-      it('approving amounts between 1 and 999999999999.99 SEK', function () {
+    describe('Amount by...', () => {
+      it('approving amounts between 1 and 999999999999.99 SEK', () => {
         assert.strictEqual(verify('200', 'amount'), '200.00');
         assert.strictEqual(verify('1', 'amount'), '1.00');
         assert.strictEqual(verify(1, 'amount'), '1.00');
@@ -124,7 +122,7 @@ describe('Helpers comprise...', function () {
         assert.strictEqual(verify(999999999999.99, 'amount'), '999999999999.99');
       });
 
-      it('formatting amounts to 2 decimal places with rounding', function () {
+      it('formatting amounts to 2 decimal places with rounding', () => {
         assert.strictEqual(verify('200.009', 'amount'), '200.01');
         assert.strictEqual(verify(498.9999999, 'amount'), '499.00');
         assert.strictEqual(verify('767.1', 'amount'), '767.10');
@@ -134,7 +132,7 @@ describe('Helpers comprise...', function () {
         assert.strictEqual(verify('5523', 'amount'), '5523.00');
       });
 
-      it('failing amounts that are less than 1 or more than 999999999999.99', function () {
+      it('failing amounts that are less than 1 or more than 999999999999.99', () => {
         assert.strictEqual(verify(0.99, 'amount'), false);
         assert.strictEqual(verify('0.99', 'amount'), false);
         assert.strictEqual(verify(1000000000000, 'amount'), false);
@@ -144,14 +142,14 @@ describe('Helpers comprise...', function () {
         assert.strictEqual(verify('10000000000000', 'amount'), false);
       });
 
-      it('failing invalid strings', function () {
+      it('failing invalid strings', () => {
         assert.strictEqual(verify('invalid', 'amount'), false);
         assert.strictEqual(verify('165.34end', 'amount'), false);
         assert.strictEqual(verify('16L5.23', 'amount'), false);
         assert.strictEqual(verify('l33t', 'amount'), false);
       });
 
-      it('failing amounts that are not strings or numbers', function () {
+      it('failing amounts that are not strings or numbers', () => {
         assert.strictEqual(verify({ amount: '1236782918' }, 'amount'), false);
         assert.strictEqual(verify(['1236782918'], 'amount'), false);
         assert.strictEqual(verify(true, 'amount'), false);
@@ -160,8 +158,8 @@ describe('Helpers comprise...', function () {
       });
     });
 
-    describe('Age Limit by...', function () {
-      it('approving numbers or strings between 1 and 99', function () {
+    describe('Age Limit by...', () => {
+      it('approving numbers or strings between 1 and 99', () => {
         assert.strictEqual(verify('1', 'ageLimit'), 1);
         assert.strictEqual(verify('99', 'ageLimit'), 99);
         assert.strictEqual(verify(45, 'ageLimit'), 45);
@@ -169,7 +167,7 @@ describe('Helpers comprise...', function () {
         assert.strictEqual(verify(79, 'ageLimit'), 79);
       });
 
-      it('failing numbers that are less than 1 or more than 99', function () {
+      it('failing numbers that are less than 1 or more than 99', () => {
         assert.strictEqual(verify(0, 'ageLimit'), false);
         assert.strictEqual(verify('0', 'ageLimit'), false);
         assert.strictEqual(verify(100, 'ageLimit'), false);
@@ -179,7 +177,7 @@ describe('Helpers comprise...', function () {
         assert.strictEqual(verify('-1', 'ageLimit'), false);
       });
 
-      it('failing non-integers', function () {
+      it('failing non-integers', () => {
         assert.strictEqual(verify('0.99', 'ageLimit'), false);
         assert.strictEqual(verify('1.1', 'ageLimit'), false);
         assert.strictEqual(verify(99.1, 'ageLimit'), false);
@@ -188,14 +186,14 @@ describe('Helpers comprise...', function () {
         assert.strictEqual(verify('24.7', 'ageLimit'), false);
       });
 
-      it('failing invalid strings', function () {
+      it('failing invalid strings', () => {
         assert.strictEqual(verify('invalid', 'ageLimit'), false);
         assert.strictEqual(verify('165.34end', 'ageLimit'), false);
         assert.strictEqual(verify('16L5.23', 'ageLimit'), false);
         assert.strictEqual(verify('l33t', 'ageLimit'), false);
       });
 
-      it('failing numbers that are not strings or numbers', function () {
+      it('failing numbers that are not strings or numbers', () => {
         assert.strictEqual(verify({ ageLimit: '45' }, 'ageLimit'), false);
         assert.strictEqual(verify(['45'], 'ageLimit'), false);
         assert.strictEqual(verify(true, 'ageLimit'), false);
@@ -204,8 +202,8 @@ describe('Helpers comprise...', function () {
       });
     });
 
-    describe('Message by...', function () {
-      it('allowing messages up to 50 allowable characters', function () {
+    describe('Message by...', () => {
+      it('allowing messages up to 50 allowable characters', () => {
         assert.strictEqual(verify('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwx', 'message'), 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwx');
         assert.strictEqual(verify('yz(012)3456789:åäöÅÄÖ', 'message'), 'yz(012)3456789:åäöÅÄÖ');
         assert.strictEqual(verify('"?"', 'message'), '"?"');
@@ -213,16 +211,16 @@ describe('Helpers comprise...', function () {
         assert.strictEqual(verify('', 'message'), '');
       });
 
-      it('failing messages over 50 characters', function () {
+      it('failing messages over 50 characters', () => {
         assert.strictEqual(verify('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxy', 'message'), false);
       });
 
-      it('failing messages with disallowed characters', function () {
+      it('failing messages with disallowed characters', () => {
         assert.strictEqual(verify('{no]', 'message'), false);
         assert.strictEqual(verify('£#ajklj]', 'message'), false);
       });
 
-      it('failing messages that are not strings', function () {
+      it('failing messages that are not strings', () => {
         assert.strictEqual(verify(76897238497389, 'message'), false);
         assert.strictEqual(verify({ message: 'message' }, 'message'), false);
         assert.strictEqual(verify(['message'], 'message'), false);
@@ -232,27 +230,27 @@ describe('Helpers comprise...', function () {
       });
     });
 
-    describe('Payee Payment Reference by...', function () {
-      it('allowing references from 1 to 36 allowable characters', function () {
+    describe('Payee Payment Reference by...', () => {
+      it('allowing references from 1 to 36 allowable characters', () => {
         assert.strictEqual(verify('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghij', 'payeePaymentReference'), 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghij');
         assert.strictEqual(verify('klmnopqrstuvwxyz0123456789', 'payeePaymentReference'), 'klmnopqrstuvwxyz0123456789');
         assert.strictEqual(verify('J', 'payeePaymentReference'), 'J');
         assert.strictEqual(verify('Aa9', 'payeePaymentReference'), 'Aa9');
       });
 
-      it('failing empty references and references over 36 characters', function () {
+      it('failing empty references and references over 36 characters', () => {
         assert.strictEqual(verify('', 'payeePaymentReference'), false);
         assert.strictEqual(verify('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijk', 'payeePaymentReference'), false);
       });
 
-      it('failing messages with disallowed characters', function () {
+      it('failing messages with disallowed characters', () => {
         assert.strictEqual(verify('AB!', 'payeePaymentReference'), false);
         assert.strictEqual(verify('Lf$', 'payeePaymentReference'), false);
         assert.strictEqual(verify('j£u', 'payeePaymentReference'), false);
         assert.strictEqual(verify('[huj]', 'payeePaymentReference'), false);
       });
 
-      it('failing messages that are not strings', function () {
+      it('failing messages that are not strings', () => {
         assert.strictEqual(verify(12351234, 'payeePaymentReference'), false);
         assert.strictEqual(verify({ payeePaymentReference: 'ref' }, 'payeePaymentReference'), false);
         assert.strictEqual(verify(['ref'], 'payeePaymentReference'), false);
@@ -262,26 +260,26 @@ describe('Helpers comprise...', function () {
       });
     });
 
-    describe('UUID / Payment Reference by...', function () {
-      it('allowing hex numbers of 32 characters', function () {
+    describe('UUID / Payment Reference by...', () => {
+      it('allowing hex numbers of 32 characters', () => {
         assert.strictEqual(verify('0123456789ABCDEF0123456789abcdef', 'uuid'), '0123456789ABCDEF0123456789abcdef');
         assert.strictEqual(verify('00000000000000000000000000000000', 'uuid'), '00000000000000000000000000000000');
         assert.strictEqual(verify('AaBbCcDdEeFf123456ABCDEFABCDEF97', 'uuid'), 'AaBbCcDdEeFf123456ABCDEFABCDEF97');
       });
 
-      it('failing numbers with less/more than 32 characters', function () {
+      it('failing numbers with less/more than 32 characters', () => {
         assert.strictEqual(verify('0123456789ABCDEF0123456789abcde', 'uuid'), false);
         assert.strictEqual(verify('0123456789ABCDEF0123456789abcdef0', 'uuid'), false);
         assert.strictEqual(verify('12', 'uuid'), false);
       });
 
-      it('failing numbers with disallowed characters', function () {
+      it('failing numbers with disallowed characters', () => {
         assert.strictEqual(verify('0123456789ABCDEF0123456789abcdeg', 'uuid'), false);
         assert.strictEqual(verify('0123456789ABCDEF!123456789abcdef', 'uuid'), false);
         assert.strictEqual(verify('0123456789ABCDEF!123456789abcdeZ', 'uuid'), false);
       });
 
-      it('failing messages that are not strings', function () {
+      it('failing messages that are not strings', () => {
         assert.strictEqual(verify(12351234, 'uuid'), false);
         assert.strictEqual(verify({ payeePaymentReference: '0123456789ABCDEF0123456789abcdef' }, 'uuid'), false);
         assert.strictEqual(verify(['ref'], 'uuid'), false);
@@ -291,36 +289,36 @@ describe('Helpers comprise...', function () {
       });
     });
 
-    describe('Personnummer by...', function () {
-      it('allowing numbers of 10 or 12 numbers with hypen', function () {
+    describe('Personnummer by...', () => {
+      it('allowing numbers of 10 or 12 numbers with hypen', () => {
         assert.strictEqual(verify('8112189876', 'personNummer'), '198112189876');
         assert.strictEqual(verify('870912-6760', 'personNummer'), '198709126760');
         assert.strictEqual(verify('198909191788', 'personNummer'), '198909191788');
         assert.strictEqual(verify('9902018879', 'personNummer'), '199902018879');
       });
 
-      it('failing numbers that are older than 120 years', function () {
+      it('failing numbers that are older than 120 years', () => {
         assert.strictEqual(verify('18730909-1572', 'personNummer'), false);
         assert.strictEqual(verify('19000909-1572', 'personNummer'), false);
       });
 
-      it('failing numbers with incorrect control digit', function () {
+      it('failing numbers with incorrect control digit', () => {
         assert.strictEqual(verify('197608186687', 'personNummer'), false);
       });
 
-      it('failing numbers that are incorrect length', function () {
+      it('failing numbers that are incorrect length', () => {
         assert.strictEqual(verify('18730909-157', 'personNummer'), false);
         assert.strictEqual(verify('19000909-15726', 'personNummer'), false);
       });
 
-      it('failing numbers with non numerals and hyphens', function () {
+      it('failing numbers with non numerals and hyphens', () => {
         assert.strictEqual(verify('197212!18879', 'personNummer'), false);
         assert.strictEqual(verify('197212AB8879', 'personNummer'), false);
         assert.strictEqual(verify('19721211887$', 'personNummer'), false);
         assert.strictEqual(verify('{}7212118879', 'personNummer'), false);
       });
 
-      it('failing numbers that are not strings', function () {
+      it('failing numbers that are not strings', () => {
         assert.strictEqual(verify(198409147892, 'personNummer'), false);
         assert.strictEqual(verify({ personNummer: '199301015578' }, 'personNummer'), false);
         assert.strictEqual(verify(['199301015578'], 'personNummer'), false);
@@ -330,8 +328,8 @@ describe('Helpers comprise...', function () {
       });
     });
 
-    describe('Verification Type by...', function () {
-      it('failing on incorrect verification type', function () {
+    describe('Verification Type by...', () => {
+      it('failing on incorrect verification type', () => {
         assert.strictEqual(verify('INCORRECT', 'notAType'), false);
         assert.strictEqual(verify(1674638, 12542), false);
         assert.strictEqual(verify('200', { type: 'amount' }), false);

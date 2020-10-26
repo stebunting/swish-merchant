@@ -1,5 +1,3 @@
-/* eslint-disable prefer-arrow-callback */
-/* eslint-disable func-names */
 // Requirements
 const assert = require('assert').strict;
 const Swish = require('../src/swish');
@@ -13,45 +11,40 @@ describe('Swish Class...', () => {
     ca: 'test/private/test-ca.pem',
     password: 'swish'
   };
+
+  function initiateClass() {
+    swish = new Swish(classPayload);
+    assert(true);
+
+    // Set URL to Simulator Testing URL
+    swish.url = 'https://mss.cpc.getswish.net/swish-cpcapi';
+  }
+
+  let requestPayload;
   let validTransactionId;
+  function initialisePayload() {
+    requestPayload = {
+      phoneNumber: '4672242856',
+      amount: 200,
+      message: 'This is a message!',
+      payeePaymentReference: '358792ABC',
+      ageLimit: 16
+    };
+  }
 
-  describe('creates Payment Request and...', function () {
-    before('initiate class', function () {
-      swish = new Swish(classPayload);
-      assert(true);
+  describe('creates Payment Request and...', () => {
+    beforeEach('initiate class', initiateClass);
 
-      // Set URL to Simulator Testing URL
-      swish.url = 'https://mss.cpc.getswish.net/swish-cpcapi';
-    });
+    describe('succeeds...', () => {
+      beforeEach('initialise payload', initialisePayload);
 
-    describe('succeeds...', function () {
-      let requestPayload;
-
-      before('initiates class', function () {
-        swish = new Swish(classPayload);
-        assert(true);
-
-        // Set URL to Simulator Testing URL
-        swish.url = 'https://mss.cpc.getswish.net/swish-cpcapi';
-      });
-
-      beforeEach('initialise payload', function () {
-        requestPayload = {
-          phoneNumber: '4672242856',
-          amount: 200,
-          message: 'This is a message!',
-          payeePaymentReference: '358792ABC',
-          ageLimit: 16
-        };
-      });
-
-      it('with valid information', async function () {
+      it('with valid information', async () => {
         const response = await swish.createPaymentRequest(requestPayload);
         assert(response.success);
         validTransactionId = response.id;
       });
 
-      it('with valid message', async function () {
+      it('with valid message', async () => {
         const response = await swish.createPaymentRequest({
           phoneNumber: '0738792',
           amount: '1',
@@ -60,7 +53,7 @@ describe('Swish Class...', () => {
         assert(response.success);
       });
 
-      it('with valid payeePaymentReference', async function () {
+      it('with valid payeePaymentReference', async () => {
         const response = await swish.createPaymentRequest({
           phoneNumber: '0738792',
           amount: '1',
@@ -69,7 +62,7 @@ describe('Swish Class...', () => {
         assert(response.success);
       });
 
-      it('with valid personNummer', async function () {
+      it('with valid personNummer', async () => {
         const response = await swish.createPaymentRequest({
           phoneNumber: '0738792',
           amount: '1',
@@ -79,8 +72,8 @@ describe('Swish Class...', () => {
       });
     });
 
-    describe('fails (bypassing local checks)...', function () {
-      it('with invalid payer alias', async function () {
+    describe('fails (bypassing local checks)...', () => {
+      it('with invalid payer alias', async () => {
         await assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '07876879',
@@ -97,7 +90,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with invalid callback URL', async function () {
+      it('with invalid callback URL', async () => {
         await assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '07876879',
@@ -114,7 +107,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with invalid payment reference', async function () {
+      it('with invalid payment reference', async () => {
         await assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '07876879',
@@ -131,7 +124,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with too high amount', async function () {
+      it('with too high amount', async () => {
         await assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0722247583',
@@ -148,7 +141,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with too low amount', async function () {
+      it('with too low amount', async () => {
         await assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0722247583',
@@ -165,7 +158,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with invalid currency value', async function () {
+      it('with invalid currency value', async () => {
         await assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0722247583',
@@ -182,7 +175,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with badly formatted message', async function () {
+      it('with badly formatted message', async () => {
         await assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0722247583',
@@ -199,7 +192,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with no payment request found related to token', async function () {
+      it('with no payment request found related to token', async () => {
         await assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0722247583',
@@ -216,7 +209,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with payment request already pending for payer', async function () {
+      it('with payment request already pending for payer', async () => {
         await assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0722247583',
@@ -233,7 +226,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with counterpart not activated', async function () {
+      it('with counterpart not activated', async () => {
         await assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0722247583',
@@ -250,7 +243,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with payer not yet enrolled', async function () {
+      it('with payer not yet enrolled', async () => {
         await assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0722247583',
@@ -267,7 +260,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with payee not yet enrolled', async function () {
+      it('with payee not yet enrolled', async () => {
         await assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0722247583',
@@ -284,7 +277,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with payer who does not meet age limit', async function () {
+      it('with payer who does not meet age limit', async () => {
         await assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0722247583',
@@ -301,7 +294,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with payer who is not enrolled with ssn', async function () {
+      it('with payer who is not enrolled with ssn', async () => {
         await assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0722247583',
@@ -319,8 +312,8 @@ describe('Swish Class...', () => {
       });
     });
 
-    describe('fails...', function () {
-      it('with invalid payer alias', async function () {
+    describe('fails...', () => {
+      it('with invalid payer alias', async () => {
         assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0787',
@@ -336,7 +329,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with too high amount', async function () {
+      it('with too high amount', async () => {
         assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0722247583',
@@ -352,7 +345,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with invalid amount', async function () {
+      it('with invalid amount', async () => {
         assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0722247583',
@@ -368,7 +361,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with invalid message', async function () {
+      it('with invalid message', async () => {
         assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0722247583',
@@ -385,7 +378,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with invalid payee payment reference', async function () {
+      it('with invalid payee payment reference', async () => {
         assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0722247583',
@@ -402,7 +395,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with invalid person nummer', async function () {
+      it('with invalid person nummer', async () => {
         assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0722247583',
@@ -419,7 +412,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with invalid age limit', async function () {
+      it('with invalid age limit', async () => {
         assert.rejects(
           swish.createPaymentRequest({
             phoneNumber: '0722247583',
@@ -438,29 +431,13 @@ describe('Swish Class...', () => {
     });
   });
 
-  describe('retrieves Payment Request and...', function () {
-    let requestPayload;
+  describe('retrieves Payment Request and...', () => {
+    beforeEach('initiates class', initiateClass);
 
-    before('initiates class', function () {
-      swish = new Swish(classPayload);
-      assert(true);
+    describe('succeeds...', () => {
+      beforeEach('initialise payload', initialisePayload);
 
-      // Set URL to Simulator Testing URL
-      swish.url = 'https://mss.cpc.getswish.net/swish-cpcapi';
-    });
-
-    beforeEach('initialise payload', function () {
-      requestPayload = {
-        phoneNumber: '4672242856',
-        amount: 200,
-        message: 'This is a message!',
-        payeePaymentReference: '358792ABC',
-        ageLimit: 16
-      };
-    });
-
-    describe('succeeds...', function () {
-      it('with valid payload', async function () {
+      it('with valid payload', async () => {
         const response = await swish.retrievePaymentRequest({
           id: validTransactionId
         });
@@ -482,8 +459,8 @@ describe('Swish Class...', () => {
       });
     });
 
-    describe('fails...', function () {
-      it('with missing id', function () {
+    describe('fails...', () => {
+      it('with missing id', () => {
         assert.rejects(swish.retrievePaymentRequest(), {
           name: 'SwishError',
           errors: [{
@@ -494,7 +471,7 @@ describe('Swish Class...', () => {
         });
       });
 
-      it('with invalid id', async function () {
+      it('with invalid id', async () => {
         assert.rejects(
           swish.retrievePaymentRequest({
             id: 'INVALIDID'
@@ -512,17 +489,8 @@ describe('Swish Class...', () => {
   });
 
   describe('Integration Test', () => {
-    let requestPayload;
-
-    before('initiates class', function () {
-      swish = new Swish(classPayload);
-      assert(true);
-
-      // Set URL to Simulator Testing URL
-      swish.url = 'https://mss.cpc.getswish.net/swish-cpcapi';
-    });
-
-    beforeEach('initialise payload', function () {
+    before('initiates class', initiateClass);
+    beforeEach('initialise payload', () => {
       requestPayload = {
         phoneNumber: '46733887459',
         amount: 950,
@@ -532,7 +500,7 @@ describe('Swish Class...', () => {
       };
     });
 
-    it('Creates and retrieves request', async function () {
+    it('Creates and retrieves request', async () => {
       const postRes = await swish.createPaymentRequest(requestPayload);
       const getRes = await swish.retrievePaymentRequest({
         id: postRes.id

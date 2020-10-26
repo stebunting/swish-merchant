@@ -1,5 +1,3 @@
-/* eslint-disable prefer-arrow-callback */
-/* eslint-disable func-names */
 // Requirements
 const assert = require('assert').strict;
 const Swish = require('../src/swish');
@@ -7,14 +5,15 @@ const stringCerts = require('./private/testStrings.js');
 
 describe('Swish Class Constructor...', () => {
   let swish;
-
-  beforeEach('reset swish object', function () {
+  function resetSwishObject() {
     swish = undefined;
-  });
+  }
 
-  describe('constructs Swish object and...', function () {
-    describe('succeeds...', function () {
-      it('with default payment request callback', function () {
+  describe('constructs Swish object and...', () => {
+    describe('succeeds...', () => {
+      afterEach('reset swish object', resetSwishObject);
+
+      it('with default payment request callback', () => {
         swish = new Swish({ alias: '1234567890' });
         assert.strictEqual(swish.paymentRequestCallback, 'https://swish-callback.com/');
 
@@ -31,7 +30,7 @@ describe('Swish Class Constructor...', () => {
         assert.strictEqual(swish.paymentRequestCallback, 'https://swish-callback.com/');
       });
 
-      it('with string certificates', async function () {
+      it('with string certificates', async () => {
         swish = new Swish({
           alias: '1234567890',
           cert: stringCerts.cert,
@@ -51,8 +50,10 @@ describe('Swish Class Constructor...', () => {
       });
     });
 
-    describe('throws SwishError on...', function () {
-      it('invalid certificate', function () {
+    describe('throws SwishError on...', () => {
+      afterEach('reset swish object', resetSwishObject);
+
+      it('invalid certificate', () => {
         swish = new Swish({
           alias: '1234567890'
         });
@@ -71,7 +72,7 @@ describe('Swish Class Constructor...', () => {
         );
       });
 
-      it('missing alias', function () {
+      it('missing alias', () => {
         assert.throws(() => {
           swish = new Swish();
         }, {
@@ -84,7 +85,7 @@ describe('Swish Class Constructor...', () => {
         assert.strictEqual(swish, undefined);
       });
 
-      it('invalid merchant alias', function () {
+      it('invalid merchant alias', () => {
         assert.throws(() => {
           swish = new Swish({
             alias: 'INVALIDALIAS'
@@ -99,7 +100,7 @@ describe('Swish Class Constructor...', () => {
         assert.strictEqual(swish, undefined);
       });
 
-      it('invalid payment request callback URL', function () {
+      it('invalid payment request callback URL', () => {
         assert.throws(() => {
           swish = new Swish({
             alias: '1234567890',
@@ -115,7 +116,7 @@ describe('Swish Class Constructor...', () => {
         assert.strictEqual(swish, undefined);
       });
 
-      it('invalid certificate', function () {
+      it('invalid certificate', () => {
         assert.throws(() => {
           swish = new Swish({
             alias: '1234679304',
@@ -131,7 +132,7 @@ describe('Swish Class Constructor...', () => {
         assert.strictEqual(swish, undefined);
       });
 
-      it('invalid key', function () {
+      it('invalid key', () => {
         assert.throws(() => {
           swish = new Swish({
             alias: '1234679304',
@@ -147,7 +148,7 @@ describe('Swish Class Constructor...', () => {
         assert.strictEqual(swish, undefined);
       });
 
-      it('invalid CA', function () {
+      it('invalid CA', () => {
         assert.throws(() => {
           swish = new Swish({
             alias: '1234679304',

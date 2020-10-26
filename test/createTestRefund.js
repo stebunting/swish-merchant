@@ -1,5 +1,3 @@
-/* eslint-disable prefer-arrow-callback */
-/* eslint-disable func-names */
 // Requirements
 const assert = require('assert').strict;
 const Swish = require('../src/swish');
@@ -14,54 +12,42 @@ describe('Swish Class...', () => {
     password: 'swish'
   };
 
-  describe('creates Refund Request and...', function () {
-    describe('succeeds...', function () {
-      let requestPayload;
+  function initiateClass() {
+    swish = new Swish(classPayload);
+    assert(true);
 
-      before('initiates class', function () {
-        swish = new Swish(classPayload);
-        assert(true);
+    // Set URL to Simulator Testing URL
+    swish.url = 'https://mss.cpc.getswish.net/swish-cpcapi';
+  }
 
-        // Set URL to Simulator Testing URL
-        swish.url = 'https://mss.cpc.getswish.net/swish-cpcapi';
-      });
+  let requestPayload;
+  let validTransactionId;
+  function initialisePayload() {
+    requestPayload = {
+      amount: 200,
+      originalPaymentReference: '1234567890ABCDEF1234567890ABCDEF',
+      message: 'This is a refund',
+      payerPaymentReference: 'payerRef'
+    };
+  }
 
-      beforeEach('initialise payload', function () {
-        requestPayload = {
-          amount: 200,
-          originalPaymentReference: '1234567890ABCDEF1234567890ABCDEF',
-          message: 'This is a refund',
-          payerPaymentReference: 'payerRef'
-        };
-      });
+  describe('creates Refund Request and...', () => {
+    beforeEach('initiates class', initiateClass);
 
-      it('with valid information', async function () {
+    describe('succeeds...', () => {
+      beforeEach('initialise payload', initialisePayload);
+
+      it('with valid information', async () => {
         const response = await swish.createRefundRequest(requestPayload);
         assert(response.success);
+        validTransactionId = response.id;
       });
     });
 
-    describe('fails (bypassing local checks)...', function () {
-      let requestPayload;
+    describe('fails (bypassing local checks)...', () => {
+      beforeEach('initialise payload', initialisePayload);
 
-      before('initiates class', function () {
-        swish = new Swish(classPayload);
-        assert(true);
-
-        // Set URL to Simulator Testing URL
-        swish.url = 'https://mss.cpc.getswish.net/swish-cpcapi';
-      });
-
-      beforeEach('initialise payload', function () {
-        requestPayload = {
-          amount: 200,
-          originalPaymentReference: '1234567890ABCDEF1234567890ABCDEF',
-          message: 'This is a refund',
-          payerPaymentReference: 'payerRef'
-        };
-      });
-
-      it('with invalid payer alias', async function () {
+      it('with invalid payer alias', async () => {
         requestPayload.message = 'FF08';
         await assert.rejects(
           swish.createRefundRequest(requestPayload), {
@@ -75,7 +61,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with invalid amount', async function () {
+      it('with invalid amount', async () => {
         requestPayload.message = 'PA02';
         await assert.rejects(
           swish.createRefundRequest(requestPayload), {
@@ -89,7 +75,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with insufficent funds', async function () {
+      it('with insufficent funds', async () => {
         requestPayload.message = 'AM04';
         await assert.rejects(
           swish.createRefundRequest(requestPayload), {
@@ -103,7 +89,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with payment not found', async function () {
+      it('with payment not found', async () => {
         requestPayload.message = 'RF02';
         await assert.rejects(
           swish.createRefundRequest(requestPayload), {
@@ -117,7 +103,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with unmatched payer alias', async function () {
+      it('with unmatched payer alias', async () => {
         requestPayload.message = 'RF03';
         await assert.rejects(
           swish.createRefundRequest(requestPayload), {
@@ -131,7 +117,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with unmatched payer organization number', async function () {
+      it('with unmatched payer organization number', async () => {
         requestPayload.message = 'RF04';
         await assert.rejects(
           swish.createRefundRequest(requestPayload), {
@@ -145,7 +131,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with unmatched SSN', async function () {
+      it('with unmatched SSN', async () => {
         requestPayload.message = 'RF06';
         await assert.rejects(
           swish.createRefundRequest(requestPayload), {
@@ -159,7 +145,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it.skip('with declined transaction', async function () {
+      it.skip('with declined transaction', async () => {
         requestPayload.message = 'RF07';
         await assert.rejects(
           swish.createRefundRequest(requestPayload), {
@@ -173,7 +159,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with too large value', async function () {
+      it('with too large value', async () => {
         requestPayload.message = 'RF08';
         await assert.rejects(
           swish.createRefundRequest(requestPayload), {
@@ -187,7 +173,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with refund already in process', async function () {
+      it('with refund already in process', async () => {
         requestPayload.message = 'RF09';
         await assert.rejects(
           swish.createRefundRequest(requestPayload), {
@@ -201,7 +187,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with instruction UUID not available', async function () {
+      it('with instruction UUID not available', async () => {
         requestPayload.message = 'RP09';
         await assert.rejects(
           swish.createRefundRequest(requestPayload), {
@@ -216,16 +202,10 @@ describe('Swish Class...', () => {
       });
     });
 
-    describe('fails...', function () {
-      before('initiates class', function () {
-        swish = new Swish(classPayload);
-        assert(true);
+    describe('fails...', () => {
+      beforeEach('initialise payload', initialisePayload);
 
-        // Set URL to Simulator Testing URL
-        swish.url = 'https://mss.cpc.getswish.net/swish-cpcapi';
-      });
-
-      it('with invalid original payment reference', async function () {
+      it('with invalid original payment reference', async () => {
         assert.rejects(
           swish.createRefundRequest({
             originalPaymentReference: 'INVALID',
@@ -241,7 +221,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with invalid original payment reference', async function () {
+      it('with invalid original payment reference', async () => {
         assert.rejects(
           swish.createRefundRequest({
             originalPaymentReference: 'INVALID',
@@ -257,7 +237,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with too high amount', async function () {
+      it('with too high amount', async () => {
         assert.rejects(
           swish.createRefundRequest({
             originalPaymentReference: '1234567890ABCDEF1234567890ABCDEF',
@@ -273,7 +253,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with invalid amount', async function () {
+      it('with invalid amount', async () => {
         assert.rejects(
           swish.createRefundRequest({
             originalPaymentReference: '1234567890ABCDEF1234567890ABCDEF',
@@ -289,7 +269,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with invalid message', async function () {
+      it('with invalid message', async () => {
         assert.rejects(
           swish.createRefundRequest({
             originalPaymentReference: '1234567890ABCDEF1234567890ABCDEF',
@@ -306,7 +286,7 @@ describe('Swish Class...', () => {
         );
       });
 
-      it('with invalid payerPaymentReference', async function () {
+      it('with invalid payerPaymentReference', async () => {
         assert.rejects(
           swish.createRefundRequest({
             originalPaymentReference: '1234567890ABCDEF1234567890ABCDEF',
@@ -325,34 +305,18 @@ describe('Swish Class...', () => {
     });
   });
 
-  describe('retrieves Refund Request and...', function () {
-    let requestPayload;
-    const transactionId = 'ED6F08DDF4C1439AB071CB8B465EB024';
+  describe('retrieves Refund Request and...', () => {
+    beforeEach('initiates class', initiateClass);
 
-    before('initiates class', function () {
-      swish = new Swish(classPayload);
-      assert(true);
+    describe('succeeds...', () => {
+      beforeEach('initialise payload', initialisePayload);
 
-      // Set URL to Simulator Testing URL
-      swish.url = 'https://mss.cpc.getswish.net/swish-cpcapi';
-    });
-
-    beforeEach('initialise payload', function () {
-      requestPayload = {
-        amount: 200,
-        originalPaymentReference: '1234567890ABCDEF1234567890ABCDEF',
-        message: 'This is a refund',
-        payerPaymentReference: 'payerRef'
-      };
-    });
-
-    describe('succeeds...', function () {
-      it('with valid payload', async function () {
+      it('with valid payload', async () => {
         const response = await swish.retrieveRefundRequest({
-          id: transactionId
+          id: validTransactionId
         });
         assert(response.success);
-        assert.strictEqual(response.data.id, transactionId);
+        assert.strictEqual(response.data.id, validTransactionId);
         assert.strictEqual(response.data.payerAlias, classPayload.alias);
         assert.strictEqual(response.data.amount, requestPayload.amount);
         assert.strictEqual(response.data.message, requestPayload.message);
@@ -361,17 +325,17 @@ describe('Swish Class...', () => {
           requestPayload.payeePaymentReference
         );
         assert.strictEqual(response.data.currency, 'SEK');
-        assert.strictEqual(response.data.status, 'PAID');
+        assert.strictEqual(typeof response.data.status, 'string');
         assert.strictEqual(response.data.callbackUrl, swish.paymentRequestCallback);
-        assert.strictEqual(response.data.datePaid, '2020-10-05T11:06:32.392Z');
+        assert.strictEqual(typeof response.data.datePaid, 'object');
         assert.strictEqual(response.data.errorCode, null);
         assert.strictEqual(response.data.errorMessage, null);
         requestPayload.paymentReference = response.data.paymentReference;
       });
     });
 
-    describe('fails...', function () {
-      it('with missing id', function () {
+    describe('fails...', () => {
+      it('with missing id', () => {
         assert.rejects(swish.retrieveRefundRequest(), {
           name: 'SwishError',
           errors: [{
@@ -382,7 +346,7 @@ describe('Swish Class...', () => {
         });
       });
 
-      it('with invalid id', function () {
+      it('with invalid id', () => {
         assert.rejects(
           swish.retrieveRefundRequest({
             id: 'INVALIDID'
