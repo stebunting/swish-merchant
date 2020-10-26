@@ -327,7 +327,6 @@ describe('Swish Class...', () => {
         assert.strictEqual(response.data.currency, 'SEK');
         assert.strictEqual(typeof response.data.status, 'string');
         assert.strictEqual(response.data.callbackUrl, swish.paymentRequestCallback);
-        assert.strictEqual(typeof response.data.datePaid, 'object');
         assert.strictEqual(response.data.errorCode, null);
         assert.strictEqual(response.data.errorMessage, null);
         requestPayload.paymentReference = response.data.paymentReference;
