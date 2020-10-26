@@ -1,6 +1,6 @@
 {
   "name": "swish-merchant",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Swish for Merchants Node.js Integration Library",
   "main": "index.js",
   "types": "index.d.ts",
