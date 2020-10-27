@@ -345,6 +345,21 @@ describe('Swish Class...', () => {
         );
       });
 
+      it('with no amount', async () => {
+        assert.rejects(
+          swish.createPaymentRequest({
+            phoneNumber: '0722247583'
+          }), {
+            name: 'SwishError',
+            errors: [{
+              errorCode: 'PA02',
+              errorMessage: 'Amount value is missing or not a valid number.',
+              additionalInformation: null
+            }]
+          }
+        );
+      });
+
       it('with invalid amount', async () => {
         assert.rejects(
           swish.createPaymentRequest({
