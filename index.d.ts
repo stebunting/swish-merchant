@@ -91,12 +91,12 @@ declare module 'swish-merchant' {
   export class Swish {
     constructor(args: ClassConstructor)
 
-    createPaymentRequest(args: RequestPaymentPayload): RequestPaymentResponse
+    createPaymentRequest(args: RequestPaymentPayload): Promise<RequestPaymentResponse>
 
-    retrievePaymentRequest(args: RetrievePaymentPayload): RetrievePaymentResponse
+    retrievePaymentRequest(args: RetrievePaymentPayload): Promise<RetrievePaymentResponse>
 
-    createRefundReqeust(args: RequestRefundPayload): RequestRefundResponse
+    createRefundReqeust(args: RequestRefundPayload): Promise<RequestRefundResponse>
 
-    retrieveRefundRequest(args: RetrieveRefundPayload): RetrieveRefundPayload
+    retrieveRefundRequest(args: RetrieveRefundPayload): Promise<RetrieveRefundPayload>
   }
 }
