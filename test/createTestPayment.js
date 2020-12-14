@@ -9,15 +9,13 @@ describe('Swish Class...', () => {
     cert: 'test/private/test.pem',
     key: 'test/private/test.key',
     ca: 'test/private/test-ca.pem',
-    password: 'swish'
+    password: 'swish',
+    test: true
   };
 
   function initiateClass() {
     swish = new Swish(classPayload);
     assert(true);
-
-    // Set URL to Simulator Testing URL
-    swish.url = 'https://mss.cpc.getswish.net/swish-cpcapi';
   }
 
   let requestPayload;

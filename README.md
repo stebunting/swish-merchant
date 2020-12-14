@@ -34,7 +34,8 @@ const swish = new Swish({
   alias: 'YOUR_SWISH_FOR_MERCHANTS_ALIAS',
   paymentRequestCallback: 'YOUR_CALLBACK_URL_FOR_PAYMENT_REQUESTS',
   cert: 'PATH_TO_YOUR_SWISH_CERT_FILE',
-  key: 'PATH_TO_YOUR_SWISH_KEY_FILE'
+  key: 'PATH_TO_YOUR_SWISH_KEY_FILE',
+  test: 'SET_TO_TRUE_TO_USE_SIMULATOR'
 }).then((response) => {})
   .catch((error) => {});
 ```

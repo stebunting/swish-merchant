@@ -56,6 +56,10 @@ class Swish {
 
     payload.passphrase = args.password || '';
     this.httpsAgent = new https.Agent(payload);
+
+    if (args.test === true) {
+      this.url = 'https://mss.cpc.getswish.net/swish-cpcapi';
+    }
   }
 
   // Generic put call
