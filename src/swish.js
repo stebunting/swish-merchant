@@ -24,9 +24,18 @@ class Swish {
 
     // Verify and assign payment request callback URL
     this.paymentRequestCallback = args.paymentRequestCallback || defaultCallback;
-    const verifyCallbackUrl = verify(this.paymentRequestCallback, 'callbackUrl');
-    if (verifyCallbackUrl) {
-      this.paymentRequestCallback = verifyCallbackUrl;
+    const verifyPaymentCallbackUrl = verify(this.paymentRequestCallback, 'callbackUrl');
+    if (verifyPaymentCallbackUrl) {
+      this.paymentRequestCallback = verifyPaymentCallbackUrl;
+    } else {
+      throw new SwishError(['RP03']);
+    }
+
+    // Verify and assign refund request callback URL
+    this.refundRequestCallback = args.refundRequestCallback || defaultCallback;
+    const verifyRefundCallbackUrl = verify(this.refundRequestCallback, 'callbackUrl');
+    if (verifyRefundCallbackUrl) {
+      this.refundRequestCallback = verifyRefundCallbackUrl;
     } else {
       throw new SwishError(['RP03']);
     }
@@ -188,7 +197,7 @@ class Swish {
     const args = userArgs;
     const endpoint = '/api/v2/refunds/';
     const body = {
-      callbackUrl: this.paymentRequestCallback,
+      callbackUrl: this.refundRequestCallback,
       payerAlias: this.payeeAlias,
       currency: 'SEK'
     };

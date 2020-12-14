@@ -30,6 +30,23 @@ describe('Swish Class Constructor...', () => {
         assert.strictEqual(swish.paymentRequestCallback, 'https://swish-callback.com/');
       });
 
+      it('with default refund request callback', () => {
+        swish = new Swish({ alias: '1234567890' });
+        assert.strictEqual(swish.refundRequestCallback, 'https://swish-callback.com/');
+
+        swish = new Swish({
+          alias: '1234567890',
+          refundRequestCallback: null
+        });
+        assert.strictEqual(swish.refundRequestCallback, 'https://swish-callback.com/');
+
+        swish = new Swish({
+          alias: '1234567890',
+          refundRequestCallback: undefined
+        });
+        assert.strictEqual(swish.refundRequestCallback, 'https://swish-callback.com/');
+      });
+
       it('with string certificates', async () => {
         swish = new Swish({
           alias: '1234567890',
@@ -105,6 +122,22 @@ describe('Swish Class Constructor...', () => {
           swish = new Swish({
             alias: '1234567890',
             paymentRequestCallback: 'INVALIDCALLBACK'
+          });
+        }, {
+          errors: [{
+            errorCode: 'RP03',
+            errorMessage: 'Callback URL is missing or does not use HTTPS',
+            additionalInformation: null
+          }]
+        });
+        assert.strictEqual(swish, undefined);
+      });
+
+      it('invalid refund request callback URL', () => {
+        assert.throws(() => {
+          swish = new Swish({
+            alias: '1234567890',
+            refundRequestCallback: 'INVALIDCALLBACK'
           });
         }, {
           errors: [{
